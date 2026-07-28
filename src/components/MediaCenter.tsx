@@ -104,7 +104,7 @@ export const initialMediaPosts: MediaPost[] = [
     views: 1580,
     attachmentType: 'pdf',
     attachmentUrl: '#',
-    attachmentName: '2026_Beauty_of_Joseon_ESG_Report.pdf',
+    attachmentName: '2026_Onedays_Beauty_ESG_Report.pdf',
     thumbnailUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80'
   }
 ];

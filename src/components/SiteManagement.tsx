@@ -461,7 +461,7 @@ export function SiteManagement() {
                     type="text"
                     value={contactEmail}
                     onChange={(e) => setContactEmail(e.target.value)}
-                    placeholder="help@beautyofjoseon.com"
+                    placeholder="help@onedaysbeauty.com"
                     className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs"
                   />
                 </div>
@@ -537,7 +537,7 @@ export function SiteManagement() {
                 type="text"
                 value={emailFromAddr}
                 onChange={(e) => setEmailFromAddr(e.target.value)}
-                placeholder="onboarding@resend.dev 또는 help@beautyofjoseon.com"
+                placeholder="onboarding@resend.dev 또는 help@onedaysbeauty.com"
                 className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs"
               />
             </div>
