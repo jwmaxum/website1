@@ -19,9 +19,9 @@ export interface MediaPost {
 export const initialMediaPosts: MediaPost[] = [
   {
     id: 'post-1',
-    title: '조선미녀(Beauty of Joseon), 2026 글로벌 K-뷰티 브랜드 대상 수상',
+    title: '원데이즈뷰티(Onedays Beauty), 2026 글로벌 K-뷰티 브랜드 대상 수상',
     category: 'News Room',
-    content: `조선미녀가 2026 글로벌 K-뷰티 혁신 브랜드 대상을 수상하였습니다. 조선 시대 전통 한방 원료에 현대적 기술을 결합하여 전 세계 소비자들에게 맑은 피부를 선사한 혁신적인 성과를 인정받았습니다. 앞으로도 정직한 원료와 뛰어난 스킨케어 기술력으로 보답하겠습니다.`,
+    content: `원데이즈뷰티가 2026 글로벌 K-뷰티 혁신 브랜드 대상을 수상하였습니다. 전통 원료에 현대적 기술을 결합하여 전 세계 소비자들에게 맑은 피부를 선사한 혁신적인 성과를 인정받았습니다. 앞으로도 정직한 원료와 뛰어난 스킨케어 기술력으로 보답하겠습니다.`,
     date: '2026.07.20',
     priority: 1,
     isPinned: true,
@@ -36,7 +36,7 @@ export const initialMediaPosts: MediaPost[] = [
     id: 'post-2',
     title: '[공지] 2026 하반기 글로벌 신제품 라인업 공식 출시회 안내',
     category: '공지사항',
-    content: `2026년 하반기 조선미녀의 글로벌 신제품 런칭 세미나가 개최됩니다. 인삼 및 쌀 추출물을 베이스로 한 프리미엄 스킨케어 신규 라인을 선보일 예정이오니 미디어 파트너 여러분의 많은 관심 부탁드립니다.`,
+    content: `2026년 하반기 원데이즈뷰티의 글로벌 신제품 런칭 세미나가 개최됩니다. 인삼 및 쌀 추출물을 베이스로 한 프리미엄 스킨케어 신규 라인을 선보일 예정이오니 미디어 파트너 여러분의 많은 관심 부탁드립니다.`,
     date: '2026.07.15',
     priority: 2,
     isPinned: true,
@@ -44,12 +44,12 @@ export const initialMediaPosts: MediaPost[] = [
     views: 1890,
     attachmentType: 'pdf',
     attachmentUrl: '#',
-    attachmentName: '2026_Beauty_of_Joseon_New_Products.pdf',
+    attachmentName: '2026_Onedays_Beauty_New_Products.pdf',
     thumbnailUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'post-3',
-    title: '[자료실] 조선미녀 공식 브랜드 가이드북 & CI 백터 로고 다운로드',
+    title: '[자료실] 원데이즈뷰티 공식 브랜드 가이드북 & CI 백터 로고 다운로드',
     category: '자료실',
     content: `공식 미디어 파트너사 및 글로벌 브랜드 콜라보레이션을 위한 고해상도 CI 벡터 로고 파일과 브랜드 가이드북(PDF)을 제공합니다. 사용 시 가이드라인을 준수해 주시기 바랍니다.`,
     date: '2026.07.10',
@@ -59,14 +59,14 @@ export const initialMediaPosts: MediaPost[] = [
     views: 2450,
     attachmentType: 'file',
     attachmentUrl: '#',
-    attachmentName: 'Beauty_of_Joseon_Brand_Assets_2026.zip',
+    attachmentName: 'Onedays_Beauty_Brand_Assets_2026.zip',
     thumbnailUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'post-4',
     title: '[News Room] 미주 & 유럽 글로벌 팝업스토어 성황리 종료',
     category: 'News Room',
-    content: `뉴욕, 파리, 런던에서 열린 2026 조선미녀 글로벌 체험 팝업스토어가 누적 방문객 10만 명을 돌파하며 성공적으로 마무리되었습니다.`,
+    content: `뉴욕, 파리, 런던에서 열린 2026 원데이즈뷰티 글로벌 체험 팝업스토어가 누적 방문객 10만 명을 돌파하며 성공적으로 마무리되었습니다.`,
     date: '2026.07.05',
     priority: 4,
     isPinned: false,
@@ -96,7 +96,7 @@ export const initialMediaPosts: MediaPost[] = [
     id: 'post-6',
     title: '[자료실] 2026 ESG 지속가능경영 공식 보고서 (KOR/ENG)',
     category: '자료실',
-    content: `친환경 포장재 도입 및 클린 뷰티 공정 강화를 담은 2026 조선미녀 ESG 지속가능경영 공식 보고서 국문 및 영문 버전입니다.`,
+    content: `친환경 포장재 도입 및 클린 뷰티 공정 강화를 담은 2026 원데이즈뷰티 ESG 지속가능경영 공식 보고서 국문 및 영문 버전입니다.`,
     date: '2026.06.18',
     priority: 6,
     isPinned: false,
@@ -144,7 +144,7 @@ export function MediaCenter() {
       {/* Page Title Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-serif text-slate-900 tracking-wide mb-3">Media Center</h1>
-        <p className="text-sm text-slate-500 uppercase tracking-widest font-medium">Beauty of Joseon News & Press</p>
+        <p className="text-sm text-slate-500 uppercase tracking-widest font-medium">Onedays Beauty News & Press</p>
       </div>
 
       {/* Top 3 Priority Featured Section */}

@@ -9,13 +9,13 @@ export function LegalTermsModal({ type, onClose }: LegalTermsModalProps) {
   const [activeTab, setActiveTab] = useState<'terms' | 'privacy' | 'businessInfo'>(type || 'terms');
 
   // Business info states loaded from localStorage
-  const [businessName, setBusinessName] = useState('주식회사 조선미녀');
+  const [businessName, setBusinessName] = useState('주식회사 원데이즈뷰티');
   const [ceoName, setCeoName] = useState('구태원 대표이사');
   const [businessRegNum, setBusinessRegNum] = useState('120-88-99881');
   const [ecommerceNum, setEcommerceNum] = useState('2026-서울강남-01928호');
-  const [contactAddress, setContactAddress] = useState('서울특별시 강남구 테헤란로 521, 조선미녀 타워');
+  const [contactAddress, setContactAddress] = useState('서울특별시 강남구 테헤란로 521, 원데이즈 타워');
   const [contactPhone, setContactPhone] = useState('1544-0000');
-  const [contactEmail, setContactEmail] = useState('help@beautyofjoseon.com');
+  const [contactEmail, setContactEmail] = useState('help@onedaysbeauty.com');
   const [privacyOfficer, setPrivacyOfficer] = useState('정보보호관리팀장');
 
   useEffect(() => {

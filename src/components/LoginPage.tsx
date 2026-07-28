@@ -19,8 +19,8 @@ export function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   // Configurable Company / Brand Info loaded from Admin Site Management
-  const [brandNameKo, setBrandNameKo] = useState('조선미녀');
-  const [brandNameEn, setBrandNameEn] = useState('BEAUTY OF JOSEON');
+  const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
+  const [brandNameEn, setBrandNameEn] = useState('ONEDAYS BEAUTY');
   const [faviconUrl, setFaviconUrl] = useState('');
 
   useEffect(() => {

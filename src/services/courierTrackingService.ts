@@ -13,7 +13,7 @@ export interface CourierTrackingResult {
   courier: CourierCompany;
   courierCode: string;
   trackingNumber: string;
-  currentStatus: '집화완료' | '이동중' | '배송출발' | '배송완료';
+  currentStatus: '집화완료' | '이동중' | '배송출발' | '배송중' | '배송완료';
   lastLocation: string;
   lastUpdated: string;
   senderName?: string;
@@ -67,7 +67,7 @@ export async function fetchCourierTrackingAPI(
       currentStatus: '배송중',
       lastLocation: 'CJ대한통운 서서울Hub',
       lastUpdated: formatTime(1),
-      senderName: '주식회사 조선미녀 물류센터',
+      senderName: '주식회사 원데이즈뷰티 물류센터',
       receiverName: '고객님',
       trackingUrl: getCourierWebTrackingUrl('CJ대한통운', cleanNumber),
       steps: [
@@ -107,7 +107,7 @@ export async function fetchCourierTrackingAPI(
       currentStatus: '집화완료',
       lastLocation: '로젠 이천덕평 센터',
       lastUpdated: formatTime(3),
-      senderName: '주식회사 조선미녀',
+      senderName: '주식회사 원데이즈뷰티',
       receiverName: '고객님',
       trackingUrl: getCourierWebTrackingUrl('로젠택배', cleanNumber),
       steps: [
@@ -134,7 +134,7 @@ export async function fetchCourierTrackingAPI(
       currentStatus: '배송완료',
       lastLocation: '한진 강남 배송지점',
       lastUpdated: formatTime(5),
-      senderName: '주식회사 조선미녀 물류센터',
+      senderName: '주식회사 원데이즈뷰티 물류센터',
       receiverName: '고객님',
       trackingUrl: getCourierWebTrackingUrl('한진택배', cleanNumber),
       steps: [

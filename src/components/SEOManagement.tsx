@@ -69,7 +69,7 @@ export function SEOManagement() {
               type="text"
               value={seo.metaTitle}
               onChange={(e) => setSeo({ ...seo, metaTitle: e.target.value })}
-              placeholder="조선미녀 | 전통과 현대가 만나는 프리미엄 한방 스킨케어"
+              placeholder="원데이즈뷰티 | 전통과 현대가 만나는 프리미엄 스킨케어"
               className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900"
             />
             <p className="text-[10px] text-slate-400 mt-1">권장 길이: 30~50자 내외 (브랜드명 포함)</p>
@@ -97,7 +97,7 @@ export function SEOManagement() {
               type="text"
               value={seo.metaKeywords}
               onChange={(e) => setSeo({ ...seo, metaKeywords: e.target.value })}
-              placeholder="조선미녀, 한방 화장품, 맑은쌀선크림, Beauty of Joseon, 클린뷰티"
+              placeholder="원데이즈뷰티, 화장품, 맑은쌀선크림, Onedays Beauty, 클린뷰티"
               className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs"
             />
             <p className="text-[10px] text-slate-400 mt-1">쉼표(,)로 구분하여 핵심 키워드 지정</p>
@@ -119,7 +119,7 @@ export function SEOManagement() {
                 type="text"
                 value={seo.canonicalUrl}
                 onChange={(e) => setSeo({ ...seo, canonicalUrl: e.target.value })}
-                placeholder="https://beautyofjoseon.com"
+                placeholder="https://onedaysbeauty.com"
                 className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono"
               />
             </div>

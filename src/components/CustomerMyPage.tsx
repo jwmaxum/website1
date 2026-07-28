@@ -20,7 +20,7 @@ export interface CustomerUser {
 const defaultCustomer: CustomerUser = {
   id: 'cust-1001',
   name: '김조선 님',
-  email: 'joseon_vip@beauty.com',
+  email: 'onedays_vip@beauty.com',
   phone: '010-1234-5678',
   membership: 'GOLD VIP',
   points: 12500,
@@ -40,8 +40,8 @@ export function CustomerMyPage() {
   const [activeTrackingOrder, setActiveTrackingOrder] = useState<Order | null>(null);
 
   // Configurable Company / Brand Info loaded from Admin Site Management
-  const [brandNameKo, setBrandNameKo] = useState('조선미녀');
-  const [brandNameEn, setBrandNameEn] = useState('BEAUTY OF JOSEON');
+  const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
+  const [brandNameEn, setBrandNameEn] = useState('ONEDAYS BEAUTY');
   const [faviconUrl, setFaviconUrl] = useState('');
 
   // Login Form
@@ -343,7 +343,7 @@ export function CustomerMyPage() {
                   type="email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="joseon_vip@beauty.com"
+                  placeholder="onedays_vip@beauty.com"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-900"
                   required
                 />

@@ -261,7 +261,7 @@ export function BrandManagement() {
             브랜드 철학 카드 관리 ({settings.philosophyCards.length}개)
           </h3>
           <p className="text-xs text-slate-500 mt-1">
-            조선미녀 브랜드의 3가지 핵심 철학 카드 제목, 이미지, 가치관 설명을 수정합니다.
+            원데이즈뷰티 브랜드의 3가지 핵심 철학 카드 제목, 이미지, 가치관 설명을 수정합니다.
           </p>
         </div>
 
@@ -457,7 +457,7 @@ export function BrandManagement() {
                   type="text"
                   value={editingFilm.title}
                   onChange={(e) => setEditingFilm({ ...editingFilm, title: e.target.value })}
-                  placeholder="예: 조선미녀 시그니처 릴리즈 필름"
+                  placeholder="예: 원데이즈뷰티 시그니처 릴리즈 필름"
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold"
                   required
                 />

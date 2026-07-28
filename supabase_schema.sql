@@ -1,5 +1,5 @@
 -- ====================================================================
--- BEAUTY OF JOSEON - Supabase Production Database Schema & RLS Security
+-- ONEDAYS BEAUTY - Supabase Production Database Schema & RLS Security
 -- ====================================================================
 
 -- 1. Enable Cryptography Extension for Password Hashing

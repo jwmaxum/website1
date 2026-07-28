@@ -9,45 +9,45 @@ export function SiteManagement() {
   
   // CEO Message
   const [ceoName, setCeoName] = useState('구태원 대표이사');
-  const [ceoPosition, setCeoPosition] = useState('주식회사 조선미녀 대표이사 (CEO & Founder)');
+  const [ceoPosition, setCeoPosition] = useState('주식회사 원데이즈뷰티 대표이사 (CEO & Founder)');
   const [ceoImageUrl, setCeoImageUrl] = useState('');
   const [ceoSignatureUrl, setCeoSignatureUrl] = useState('');
   const [ceoTitle, setCeoTitle] = useState('자연의 지혜와 정성을 가득 담아 피부 본연의 아름다움을 선물합니다.');
-  const [ceoContent, setCeoContent] = useState('안녕하십니까, 조선미녀(Beauty of Joseon) 대표이사 구태원입니다.\n\n저희 브랜드는 한방 화장품의 고루한 이미지를 탈피하여 현대인들이 부담 없이 스킨케어를 즐길 수 있도록 전통과 현대의 조화를 탐구해 왔습니다.\n\n조선 시대 여성들의 단아하고 기품 있는 피부 관리 방식을 현대적인 처방으로 재해석하여, 맑고 투명한 피부 본연의 힘을 되찾아 드리는 것이 저희의 사명입니다.\n\n언제나 좋은 원료와 정직한 제조를 바탕으로 고객 여러분의 신뢰에 보답하겠습니다. 늘 함께해 주셔서 감사합니다.');
-  const [ceoSignOff, setCeoSignOff] = useState('조선미녀 대표이사 구태원 드림');
+  const [ceoContent, setCeoContent] = useState('안녕하십니까, 원데이즈뷰티(Onedays Beauty) 대표이사 구태원입니다.\n\n저희 브랜드는 고루한 이미지를 탈피하여 현대인들이 부담 없이 스킨케어를 즐길 수 있도록 전통과 현대의 조화를 탐구해 왔습니다.\n\n맑고 투명한 피부 본연의 힘을 되찾아 드리는 것이 저희의 사명입니다.\n\n언제나 좋은 원료와 정직한 제조를 바탕으로 고객 여러분의 신뢰에 보답하겠습니다. 늘 함께해 주셔서 감사합니다.');
+  const [ceoSignOff, setCeoSignOff] = useState('원데이즈뷰티 대표이사 구태원 드림');
   
   // Company Overview
-  const [overviewMission, setOverviewMission] = useState('전통 한방 원료에 현대적 기술을 결합하여 현대인의 피부 고민을 덜어주는 클린 뷰티의 글로벌 스탠다드');
+  const [overviewMission, setOverviewMission] = useState('전통 원료에 현대적 기술을 결합하여 현대인의 피부 고민을 덜어주는 클린 뷰티의 글로벌 스탠다드');
   const [overviewEstYear, setOverviewEstYear] = useState('2020');
   const [overviewEmployees, setOverviewEmployees] = useState('120');
   const [overviewGlobalOffices, setOverviewGlobalOffices] = useState('3');
   const [overviewBusinessTitle, setOverviewBusinessTitle] = useState('사업영역 (Business)');
-  const [overviewBusinessContent, setOverviewBusinessContent] = useState('조선미녀는 조선 시대 여성들이 피부를 맑고 투명하게 가꾸기 위해 자연에서 얻은 원료를 활용했던 지혜에 영감을 받았습니다. 인삼, 쌀, 벌꿀 등 전통적인 한방 성분을 엄선하고 현대적인 포뮬러 기술을 결합하여 현대 스킨케어 고민을 자극 없이 해결하는 라이프스타일 뷰티 브랜드입니다.\n\n현재 아시아뿐만 아니라 미주, 유럽 등 전 세계 다양한 국가에서 사랑받으며 한국 전통 스킨케어의 아름다움을 글로벌 시장에 널리 알리고 있습니다.');
+  const [overviewBusinessContent, setOverviewBusinessContent] = useState('원데이즈뷰티는 피부를 맑고 투명하게 가꾸기 위해 자연에서 얻은 원료를 활용했던 지혜에 영감을 받았습니다. 인삼, 쌀, 벌꿀 등 성분을 엄선하고 현대적인 포뮬러 기술을 결합하여 현대 스킨케어 고민을 자극 없이 해결하는 라이프스타일 뷰티 브랜드입니다.\n\n현재 아시아뿐만 아니라 미주, 유럽 등 전 세계 다양한 국가에서 사랑받으며 아름다움을 글로벌 시장에 널리 알리고 있습니다.');
 
   // Careers
   const [careerStatus, setCareerStatus] = useState('현재 마케팅 및 글로벌 영업 직군 채용이 활발하게 진행 중입니다.');
   const [careerPositions, setCareerPositions] = useState('• [신입/경력] 글로벌 브랜드 마케터 (영어가능자 필수)\n• [경력] 국내/해외 화장품 상품 기획자 (BM)\n• [신입/경력] 자사몰 퍼포먼스 마케팅 담당자');
 
   // Brand Name & Favicon Settings
-  const [brandNameKo, setBrandNameKo] = useState('조선미녀');
-  const [brandNameEn, setBrandNameEn] = useState('BEAUTY OF JOSEON');
+  const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
+  const [brandNameEn, setBrandNameEn] = useState('ONEDAYS BEAUTY');
   const [faviconUrl, setFaviconUrl] = useState('');
 
   // Contact & Business Info Settings
-  const [businessName, setBusinessName] = useState('주식회사 조선미녀');
+  const [businessName, setBusinessName] = useState('주식회사 원데이즈뷰티');
   const [businessRegNum, setBusinessRegNum] = useState('120-88-99881');
   const [ecommerceNum, setEcommerceNum] = useState('2026-서울강남-01928호');
   const [privacyOfficer, setPrivacyOfficer] = useState('정보보호관리팀장');
 
-  const [contactAddress, setContactAddress] = useState('서울특별시 강남구 테헤란로 521, 조선미녀 타워 4층');
+  const [contactAddress, setContactAddress] = useState('서울특별시 강남구 테헤란로 521, 원데이즈 타워 4층');
   const [contactPhone, setContactPhone] = useState('1544-0000');
-  const [contactEmail, setContactEmail] = useState('help@beautyofjoseon.com');
+  const [contactEmail, setContactEmail] = useState('help@onedaysbeauty.com');
 
   // Email Service Settings (Resend API)
   const [emailProvider, setEmailProvider] = useState<EmailSettings['provider']>('resend');
   const [emailApiKey, setEmailApiKey] = useState('');
   const [emailFromAddr, setEmailFromAddr] = useState('onboarding@resend.dev');
-  const [emailFromName, setEmailFromName] = useState('조선미녀 고객지원팀');
+  const [emailFromName, setEmailFromName] = useState('원데이즈뷰티 고객지원팀');
   const [showApiKey, setShowApiKey] = useState(false);
 
   // Load from localStorage on mount
@@ -260,7 +260,7 @@ export function SiteManagement() {
       provider: emailProvider,
       apiKey: emailApiKey.trim(),
       fromEmail: emailFromAddr.trim() || 'onboarding@resend.dev',
-      fromName: emailFromName.trim() || '조선미녀 고객지원팀',
+      fromName: emailFromName.trim() || '원데이즈뷰티 고객지원팀',
       enableBcc: false,
     };
     localStorage.setItem('email_service_settings', JSON.stringify(tempConfig));
@@ -269,7 +269,7 @@ export function SiteManagement() {
       toEmail: targetEmail.trim(),
       customerName: '테스트 수신자',
       subject: 'Resend 이메일 연동 테스트입니다',
-      replyContent: '안녕하세요! 본 메일은 조선미녀 관리자 콘솔에서 발송된 Resend 이메일 연동 테스트 메시지입니다.',
+      replyContent: '안녕하세요! 본 메일은 원데이즈뷰티 관리자 콘솔에서 발송된 Resend 이메일 연동 테스트 메시지입니다.',
     });
 
     if (res.success) {
@@ -344,7 +344,7 @@ export function SiteManagement() {
                 type="text"
                 value={brandNameKo}
                 onChange={(e) => setBrandNameKo(e.target.value)}
-                placeholder="조선미녀"
+                placeholder="원데이즈뷰티"
                 className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm font-bold"
               />
             </div>
@@ -355,7 +355,7 @@ export function SiteManagement() {
                 type="text"
                 value={brandNameEn}
                 onChange={(e) => setBrandNameEn(e.target.value)}
-                placeholder="BEAUTY OF JOSEON"
+                placeholder="ONEDAYS BEAUTY"
                 className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm font-bold tracking-wider font-serif uppercase"
               />
             </div>
@@ -406,7 +406,7 @@ export function SiteManagement() {
                   type="text"
                   value={businessName}
                   onChange={(e) => setBusinessName(e.target.value)}
-                  placeholder="주식회사 조선미녀"
+                  placeholder="주식회사 원데이즈뷰티"
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs font-bold"
                 />
               </div>
@@ -439,7 +439,7 @@ export function SiteManagement() {
                   type="text"
                   value={contactAddress}
                   onChange={(e) => setContactAddress(e.target.value)}
-                  placeholder="서울특별시 강남구 테헤란로 521, 조선미녀 타워"
+                  placeholder="서울특별시 강남구 테헤란로 521, 원데이즈 타워"
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs"
                 />
               </div>
@@ -548,7 +548,7 @@ export function SiteManagement() {
                 type="text"
                 value={emailFromName}
                 onChange={(e) => setEmailFromName(e.target.value)}
-                placeholder="조선미녀 고객지원팀"
+                placeholder="원데이즈뷰티 고객지원팀"
                 className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs"
               />
             </div>
@@ -590,7 +590,7 @@ export function SiteManagement() {
                   type="text"
                   value={ceoPosition}
                   onChange={(e) => setCeoPosition(e.target.value)}
-                  placeholder="주식회사 조선미녀 대표이사 (CEO & Founder)"
+                  placeholder="주식회사 원데이즈뷰티 대표이사 (CEO & Founder)"
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs"
                 />
               </div>
@@ -683,7 +683,7 @@ export function SiteManagement() {
                 type="text"
                 value={ceoSignOff}
                 onChange={(e) => setCeoSignOff(e.target.value)}
-                placeholder="조선미녀 대표이사 구태원 드림"
+                placeholder="원데이즈뷰티 대표이사 구태원 드림"
                 className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-xs font-bold"
               />
             </div>

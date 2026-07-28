@@ -27,7 +27,7 @@ export const initialCustomerMembers: CustomerMember[] = [
   {
     id: 'cust-1001',
     name: '김조선 님',
-    email: 'joseon_vip@beauty.com',
+    email: 'onedays_vip@beauty.com',
     phone: '010-1234-5678',
     membershipTier: 'GOLD VIP',
     points: 12500,
@@ -976,9 +976,9 @@ export function CustomerManagement() {
               </h4>
               {customerAddress ? (
                 <div className="p-3 bg-blue-50/50 border border-blue-200 rounded-xl text-xs space-y-1">
-                  <p className="font-bold text-slate-900">수령인: {customerAddress.recipientName} ({customerAddress.phone})</p>
-                  <p className="text-slate-600">주소: ({customerAddress.postcode}) {customerAddress.address} {customerAddress.addressDetail}</p>
-                  <p className="text-[11px] text-slate-400">최근 업데이트: {new Date(customerAddress.updatedAt).toLocaleString()}</p>
+                  <p className="font-bold text-slate-900">수령인: {customerAddress.recipientName || customerAddress.recipient_name} ({customerAddress.phone})</p>
+                  <p className="text-slate-600">주소: {customerAddress.postcode ? `(${customerAddress.postcode}) ` : ''}{customerAddress.address} {customerAddress.addressDetail || ''}</p>
+                  <p className="text-[11px] text-slate-400">최근 업데이트: {new Date(customerAddress.updatedAt || customerAddress.updated_at || Date.now()).toLocaleString()}</p>
                 </div>
               ) : (
                 <p className="text-xs text-slate-400 bg-slate-50 p-3 rounded-xl border border-slate-200">

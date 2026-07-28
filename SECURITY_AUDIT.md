@@ -1,6 +1,6 @@
 # 🔒 보안 점검 및 DB 권한/격리 명세서 (Security Audit & DB Isolation Report)
 
-본 문서는 BEAUTY OF JOSEON 웹사이트 및 관리자 콘솔의 **고객 회원 DB와 관리자 Console 세션의 철저한 격리 및 개인정보/비밀번호 보호 보안 점검 결과**를 정리한 보고서입니다.
+본 문서는 ONEDAYS BEAUTY 웹사이트 및 관리자 콘솔의 **고객 회원 DB와 관리자 Console 세션의 철저한 격리 및 개인정보/비밀번호 보호 보안 점검 결과**를 정리한 보고서입니다.
 
 ---
 

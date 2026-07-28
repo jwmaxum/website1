@@ -44,8 +44,8 @@ export const initialFAQs: FAQItem[] = [
   {
     id: 'faq-4',
     category: '제품/성분',
-    question: '조선미녀 제품은 비건(Vegan) 및 붉은팥 PDRN 성분인가요?',
-    answer: '네, 조선미녀의 붉은팥 PDRN 세럼 및 스킨케어 라인은 동물성 원료를 배제한 100% 비건 성분과 조선 시대 전통 한방 특허 원료를 바탕으로 제조됩니다.',
+    question: '원데이즈뷰티 제품은 비건(Vegan) 및 붉은팥 PDRN 성분인가요?',
+    answer: '네, 원데이즈뷰티의 붉은팥 PDRN 세럼 및 스킨케어 라인은 동물성 원료를 배제한 100% 비건 성분과 특허 원료를 바탕으로 제조됩니다.',
     createdAt: '2026.07.22',
   },
   {
@@ -66,7 +66,7 @@ export const initialInquiries: CustomerInquiry[] = [
     subject: '해외 배송 가능 여부 문의드립니다.',
     message: '미국 뉴욕 주소지로 해외 직배송이 가능한가요?',
     status: '답변완료',
-    replyContent: '안녕하세요 김민지 고객님! 조선미녀 공식몰은 글로벌 EMS 및 DHL 직배송 서비스를 지원합니다. 해외 결제 페이지를 이용해 주세요.',
+    replyContent: '안녕하세요 김민지 고객님! 원데이즈뷰티 공식몰은 글로벌 EMS 및 DHL 직배송 서비스를 지원합니다. 해외 결제 페이지를 이용해 주세요.',
     createdAt: '2026.07.21 14:20',
     repliedAt: '2026.07.21 15:40',
   },

@@ -24,10 +24,10 @@ export const initialCategories = [
 ];
 
 export const initialBrands = [
-  'Beauty of Joseon (조선미녀)',
+  'Onedays Beauty (원데이즈뷰티)',
   'Glow Deep',
   'Hanbang Clinic',
-  'Joseon Herbal',
+  'Onedays Herbal',
 ];
 
 export const initialProducts: Product[] = [
@@ -36,21 +36,21 @@ export const initialProducts: Product[] = [
     code: 'PRD-BOJ-001',
     name: '맑은쌀선크림 : 쌀추출물+나이아시나마이드 (SPF 50+ PA++++)',
     category: '선케어 (Sun Care)',
-    brand: 'Beauty of Joseon (조선미녀)',
+    brand: 'Onedays Beauty (원데이즈뷰티)',
     price: 18000,
     salePrice: 15300,
     stock: 450,
     isBestseller: true,
     status: '판매중',
     imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLtsVqrSDMr5Hp64St34s8zOuQMwoQkxb_mpUI1fs4_2dB2UmUWby6gENUgL-jXfMej03GSR4NqFXKFf0OBWAGI2wJEX3OrSBqoUAQ0S_GzTp6JR3QNdI56t1gi0j2IsgFHVIqQHpFrmBPRSExV_9yqYXUysdrMV6j46vU4JO4cESKH_0HUMLa1XhrvVZ1We1fVi1nB3DZyflXa7qWQ9AhYRsp9B-s9p6On59kcaVEus1ayOmxiUCE28C0c3',
-    description: '조선시대 쌀뜨물 미용법에서 영감을 받은 촉촉하고 유기자차 타입의 베스트셀러 선크림입니다.',
+    description: '쌀뜨물 미용법에서 영감을 받은 촉촉하고 유기자차 타입의 베스트셀러 선크림입니다.',
   },
   {
     id: 'prd-2',
     code: 'PRD-BOJ-002',
-    name: '조선미녀 인삼 탄력 크림 60ml',
+    name: '원데이즈뷰티 인삼 탄력 크림 60ml',
     category: '크림/모이스처 (Cream)',
-    brand: 'Beauty of Joseon (조선미녀)',
+    brand: 'Onedays Beauty (원데이즈뷰티)',
     price: 24000,
     salePrice: 20400,
     stock: 210,
@@ -77,7 +77,7 @@ export const initialProducts: Product[] = [
     code: 'PRD-BOJ-004',
     name: '붉은팥 PDRN 모공탄력 세럼 30ml',
     category: '세럼/에센스 (Serum)',
-    brand: 'Beauty of Joseon (조선미녀)',
+    brand: 'Onedays Beauty (원데이즈뷰티)',
     price: 26000,
     salePrice: 22100,
     stock: 320,
@@ -89,7 +89,7 @@ export const initialProducts: Product[] = [
   {
     id: 'prd-5',
     code: 'PRD-HB-005',
-    name: '조선미녀 청매실 약산성 클렌저 100ml',
+    name: '원데이즈뷰티 청매실 약산성 클렌저 100ml',
     category: '클렌징 (Cleansing)',
     brand: 'Hanbang Clinic',
     price: 14000,
@@ -587,7 +587,7 @@ export function ProductManagement() {
                 type="text"
                 value={newBrandInput}
                 onChange={(e) => setNewBrandInput(e.target.value)}
-                placeholder="예: Joseon Rice Line"
+                placeholder="예: Onedays Rice Line"
                 className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-800"
               />
               <button

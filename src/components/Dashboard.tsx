@@ -115,7 +115,7 @@ export function Dashboard() {
             <span className="px-2.5 py-0.5 text-xs font-bold bg-amber-400 text-slate-900 rounded-full">
               Live Real-Time Sync
             </span>
-            <span className="text-xs text-slate-300">BEAUTY OF JOSEON Console</span>
+            <span className="text-xs text-slate-300">ONEDAYS BEAUTY Console</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-serif font-bold">
             안녕하세요, {currentAdminName}님!

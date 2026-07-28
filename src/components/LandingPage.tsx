@@ -72,7 +72,7 @@ export function LandingPage() {
         />
         <div className="relative z-10 p-8 md:p-14 max-w-lg bg-white/80 backdrop-blur-md border border-white/60 ml-4 md:ml-12 rounded-xl shadow-lg">
           <span className="inline-block text-xs font-bold text-amber-800 tracking-widest uppercase mb-3 bg-amber-50 px-2.5 py-1 rounded-md">
-            New Joseon Arrival
+            New Onedays Arrival
           </span>
           <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-4 leading-tight">
             무결점 피부<br />붉은팥 PDRN 세럼
@@ -268,29 +268,60 @@ export function LandingPage() {
       </section>
 
       {/* Brand Story Bento Section */}
-      <section className="mb-16 border-t border-slate-200 pt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-5 order-2 lg:order-1 pr-0 lg:pr-8">
-            <h2 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6 leading-tight">
-              Blend heritage,<br />Create beauty.
-            </h2>
-            <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-              조선시대 전통 한방 성분에 현대 고능성 과학을 더해 가장 피부 친화적인 아름다움을 선사합니다.
-            </p>
-            <Link
-              to="/company"
-              className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-1 text-sm font-bold text-slate-900 hover:text-slate-600 transition-colors uppercase tracking-widest"
-            >
-              <span>Read Brand Story</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </Link>
+      <section className="mb-20 border-t border-slate-200 pt-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main Story Hero Bento Box */}
+          <div className="lg:col-span-7 bg-slate-900 text-white rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-xl flex flex-col justify-between min-h-[380px]">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="relative z-10">
+              <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold text-indigo-300 uppercase tracking-widest mb-4 border border-white/10">
+                Heritage & Science
+              </span>
+              <h2 className="text-3xl md:text-5xl font-serif mb-4 leading-tight">
+                Blend heritage,<br />Create beauty.
+              </h2>
+              <p className="text-sm md:text-base text-slate-300 max-w-lg leading-relaxed">
+                자연 성분에 현대 피부 공학 과학을 더해 피부 본연의 투명한 기품과 건강함을 되찾아 드립니다.
+              </p>
+            </div>
+            <div className="relative z-10 pt-8">
+              <Link
+                to="/company"
+                className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-colors uppercase tracking-widest shadow-md"
+              >
+                <span>Read Brand Story</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </Link>
+            </div>
           </div>
-          
-          <div className="lg:col-span-7 order-1 lg:order-2 bg-slate-100 min-h-[350px] lg:min-h-[450px] relative rounded-2xl overflow-hidden border border-slate-200">
-            <div className="absolute inset-0 bg-gradient-to-tr from-slate-200 to-white opacity-50"></div>
-            <div className="absolute inset-4 border border-slate-300 flex flex-col justify-center items-center p-8 text-center bg-white/50 backdrop-blur-sm rounded-xl">
-              <span className="text-4xl font-serif text-slate-800 mb-4">朝鮮美女</span>
-              <p className="text-base text-slate-600 italic max-w-md">"Quiet elegance, profound efficacy."</p>
+
+          {/* Secondary Bento Specs Box */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className="flex-1 bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-3xl p-8 border border-amber-200/60 shadow-sm flex flex-col justify-between relative overflow-hidden">
+              <div>
+                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-widest">Global Craftsmanship</span>
+                <h3 className="text-2xl font-serif text-slate-900 mt-2 mb-3">ONEDAYS BEAUTY</h3>
+                <p className="text-xs text-slate-600 leading-relaxed italic">
+                  "Quiet elegance, profound dermatological efficacy."
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-amber-200/40 flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800">100% Vegan & Clean Beauty</span>
+                <span className="text-xs font-mono font-bold text-amber-800">Global 60+ Countries</span>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Customer Rating</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-2xl font-serif font-bold text-slate-900">4.9 / 5.0</span>
+                  <div className="flex text-amber-400 text-sm">★★★★★</div>
+                </div>
+              </div>
+              <span className="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
+                Verified Global Reviews
+              </span>
             </div>
           </div>
         </div>

@@ -19,7 +19,8 @@ export interface SocialAuthUser {
 export async function performSocialLogin(provider: 'google' | 'naver'): Promise<{ success: boolean; user?: SocialAuthUser; error?: string }> {
   try {
     // 1. Check if Supabase Real OAuth flow is triggered
-    if (import.meta.env.VITE_SUPABASE_URL && !import.meta.env.VITE_SUPABASE_URL.includes('placeholder')) {
+    const env = (import.meta as any).env || {};
+    if (env.VITE_SUPABASE_URL && !env.VITE_SUPABASE_URL.includes('placeholder')) {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider === 'google' ? 'google' : ('custom' as any), // Naver uses custom OAuth provider or redirect
         options: {

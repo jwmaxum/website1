@@ -19,14 +19,14 @@ export function CompanyInfo() {
   const [overviewEmployees, setOverviewEmployees] = useState('120');
   const [overviewGlobalOffices, setOverviewGlobalOffices] = useState('3');
   const [businessTitle, setBusinessTitle] = useState('사업영역 (Business)');
-  const [businessContent, setBusinessContent] = useState('조선미녀는 조선 시대 여성들이 피부를 맑고 투명하게 가꾸기 위해 자연에서 얻은 원료를 활용했던 지혜에 영감을 받았습니다. 인삼, 쌀, 벌꿀 등 전통적인 한방 성분을 엄선하고 현대적인 포뮬러 기술을 결합하여 현대 스킨케어 고민을 자극 없이 해결하는 라이프스타일 뷰티 브랜드입니다.\n\n현재 아시아뿐만 아니라 미주, 유럽 등 전 세계 다양한 국가에서 사랑받으며 한국 전통 스킨케어의 아름다움을 글로벌 시장에 널리 알리고 있습니다.');
+  const [businessContent, setBusinessContent] = useState('원데이즈뷰티는 피부를 맑고 투명하게 가꾸기 위해 자연에서 얻은 원료를 활용했던 지혜에 영감을 받았습니다. 인삼, 쌀, 벌꿀 등 성분을 엄선하고 현대적인 포뮬러 기술을 결합하여 현대 스킨케어 고민을 자극 없이 해결하는 라이프스타일 뷰티 브랜드입니다.\n\n현재 아시아뿐만 아니라 미주, 유럽 등 전 세계 다양한 국가에서 사랑받으며 아름다움을 글로벌 시장에 널리 알리고 있습니다.');
 
   const [careerStatus, setCareerStatus] = useState('현재 마케팅 및 글로벌 영업 직군 채용이 활발하게 진행 중입니다.');
   const [careerPositions, setCareerPositions] = useState('• [신입/경력] 글로벌 브랜드 마케터 (영어가능자 필수)\n• [경력] 국내/해외 화장품 상품 기획자 (BM)\n• [신입/경력] 자사몰 퍼포먼스 마케팅 담당자');
 
   const [contactAddress, setContactAddress] = useState('서울특별시 종로구 율곡로 10길 (운니동, 한방빌딩 4층)');
   const [contactPhone, setContactPhone] = useState('02-1234-5678');
-  const [contactEmail, setContactEmail] = useState('support@beautyofjoseon.com');
+  const [contactEmail, setContactEmail] = useState('support@onedaysbeauty.com');
 
   useEffect(() => {
     const savedCeoName = localStorage.getItem('site_ceo_name');

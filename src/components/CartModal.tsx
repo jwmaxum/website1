@@ -223,7 +223,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
               <div className="py-16 text-center text-slate-400 my-auto">
                 <span className="material-symbols-outlined text-[48px] text-slate-300 mb-2">remove_shopping_cart</span>
                 <p className="text-sm font-bold text-slate-600">장바구니가 비어 있습니다.</p>
-                <p className="text-xs text-slate-400 mt-1">마음에 드는 조선미녀 제품을 담아보세요!</p>
+                <p className="text-xs text-slate-400 mt-1">마음에 드는 원데이즈뷰티 제품을 담아보세요!</p>
               </div>
             ) : (
               <div className="overflow-y-auto space-y-3 pr-2 flex-1">

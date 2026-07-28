@@ -44,13 +44,13 @@ export const defaultBrandStorySettings: BrandStorySettings = {
   heroPosterUrl: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=1200&auto=format&fit=crop',
 
   philosophyTitle: 'BRAND PHILOSOPHY & CRAFTSMANSHIP',
-  philosophySubtitle: '조선미녀가 추구하는 3가지 핵심 아름다움의 가치',
+  philosophySubtitle: '원데이즈뷰티가 추구하는 3가지 핵심 아름다움의 가치',
   philosophyCards: [
     {
       id: 'phil-1',
-      title: '한방 원료의 순수한 정수',
-      subtitle: 'Rice & Ginseng Heritage',
-      description: '쌀겨수, 인삼, 녹차, 매실 등 오랜 세월 검증된 조선의 한방 성분을 최고 등급 추출 기술로 정제합니다.',
+      title: '자연 원료의 순수한 정수',
+      subtitle: 'Natural Heritage',
+      description: '쌀겨수, 인삼, 녹차, 매실 등 오랜 세월 검증된 자연 성분을 최고 등급 추출 기술로 정제합니다.',
       imageUrl: 'https://images.unsplash.com/photo-1608248597260-50c39f70a784?q=80&w=800&auto=format&fit=crop',
       badge: 'Natural Ingredients',
     },
@@ -73,12 +73,12 @@ export const defaultBrandStorySettings: BrandStorySettings = {
   ],
 
   filmSectionTitle: 'BRAND MOOD FILM & GALLERY',
-  filmSectionSubtitle: '감각적인 영상과 이미지로 경험하는 조선미녀 오가닉 무드',
+  filmSectionSubtitle: '감각적인 영상과 이미지로 경험하는 원데이즈뷰티 오가닉 무드',
   moodFilms: [
     {
       id: 'film-1',
-      title: '조선미녀 브랜드 필름 : 맑은 피부의 시작',
-      caption: '자연에서 피어나는 은은한 생기, 조선 시대 여인들의 맑고 고운 피부 비밀',
+      title: '원데이즈뷰티 브랜드 필름 : 맑은 피부의 시작',
+      caption: '자연에서 피어나는 은은한 생기, 맑고 고운 피부 비밀',
       mediaType: 'video',
       videoUrl: 'https://cdn.coverr.co/videos/coverr-applying-facial-cream-5193/1080p.mp4',
       thumbnailUrl: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=800&auto=format&fit=crop',
@@ -86,7 +86,7 @@ export const defaultBrandStorySettings: BrandStorySettings = {
     },
     {
       id: 'film-2',
-      title: '조선 맑은 쌀 선크림 시그니처 릴리즈',
+      title: '원데이즈 맑은 쌀 선크림 시그니처 릴리즈',
       caption: '백탁 없이 투명하고 촉촉하게 스며드는 수분 자외선 차단제 스토리',
       mediaType: 'video',
       videoUrl: 'https://cdn.coverr.co/videos/coverr-putting-serum-on-face-5194/1080p.mp4',
@@ -104,5 +104,5 @@ export const defaultBrandStorySettings: BrandStorySettings = {
   ],
 
   signatureQuote: '화려한 겉모습보다 피부 본연의 건강함과 기품을 가꾸는 것이 진정한 뷰티의 완성입니다.',
-  signatureAuthor: 'BEAUTY OF JOSEON ARTISTIC DIRECTOR',
+  signatureAuthor: 'ONEDAYS BEAUTY ARTISTIC DIRECTOR',
 };

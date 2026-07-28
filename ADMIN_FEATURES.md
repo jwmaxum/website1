@@ -1,6 +1,6 @@
 # 🛡️ 관리자 콘솔(Admin Console) 구현 기능 명세서
 
-본 문서는 BEAUTY OF JOSEON 웹사이트의 **관리자 콘솔(Admin Console) 및 CMS 시스템**에 구현된 기능들을 상세히 기록한 명세서입니다.
+본 문서는 ONEDAYS BEAUTY 웹사이트의 **관리자 콘솔(Admin Console) 및 CMS 시스템**에 구현된 기능들을 상세히 기록한 명세서입니다.
 
 ---
 
@@ -77,7 +77,7 @@
 - 카테고리별 등록 제품 수 실시간 카운팅 및 `localStorage`(`shop_categories`) 동기화.
 
 ### 5.2 제품 브랜드 등록 / 삭제 (Brand Management)
-- **브랜드 동적 추가/삭제**: `Beauty of Joseon (조선미녀)`, `Glow Deep`, `Hanbang Clinic` 등 브랜드를 자유롭게 신규 등록 및 삭제.
+- **브랜드 동적 추가/삭제**: `Onedays Beauty (원데이즈뷰티)`, `Glow Deep`, `Hanbang Clinic` 등 브랜드를 자유롭게 신규 등록 및 삭제.
 - `localStorage`(`shop_brands`) 동기화.
 
 ### 5.3 등록 제품 베스트셀러(Bestseller) 지정 & 관리

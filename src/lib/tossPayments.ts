@@ -30,7 +30,7 @@ export const defaultTossConfig: TossPaymentsConfig = {
   isEnabled: true,
   clientKey: 'test_ck_D5b3Mad8W6wNHad49zVQg2bRib5E', // Official TossPayments Test Client Key
   secretKey: 'test_sk_zXLk5nqw3064W22XM983neDM1awcd',
-  mid: '조선미녀 공식 가맹점',
+  mid: '원데이즈뷰티 공식 가맹점',
   defaultMethod: '카드',
   isTestMode: true,
 };

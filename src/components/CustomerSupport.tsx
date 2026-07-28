@@ -101,7 +101,7 @@ export function CustomerSupport() {
       {/* Title Header */}
       <div className="text-center mb-10">
         <h1 className="text-3xl font-serif tracking-widest text-slate-900 mb-2">CUSTOMER SUPPORT</h1>
-        <p className="text-sm text-slate-500">조선미녀 고객센터 - 자주 묻는 질문 및 1:1 상담 문의</p>
+        <p className="text-sm text-slate-500">원데이즈뷰티 고객센터 - 자주 묻는 질문 및 1:1 상담 문의</p>
       </div>
 
       {/* Main Tabs */}

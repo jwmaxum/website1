@@ -181,7 +181,7 @@ export function ContentRegistration() {
                   type="text" 
                   value={attachmentName}
                   onChange={(e) => setAttachmentName(e.target.value)}
-                  placeholder="예: 2026_조선미녀_소개서.pdf"
+                  placeholder="예: 2026_원데이즈뷰티_소개서.pdf"
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm"
                 />
               </div>
