@@ -19,7 +19,7 @@ export interface CustomerUser {
 
 const defaultCustomer: CustomerUser = {
   id: 'cust-1001',
-  name: '김조선 님',
+  name: '김원데이 님',
   email: 'onedays_vip@beauty.com',
   phone: '010-1234-5678',
   membership: 'GOLD VIP',

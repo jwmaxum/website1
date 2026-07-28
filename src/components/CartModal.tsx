@@ -46,7 +46,6 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
           setGuestEmail(user.email);
           setGuestPhone(user.phone || '');
 
-          // Retrieve saved shipping address mapped to customer ID (email)
           const savedAddr = getCustomerSavedAddress(user.email);
           if (savedAddr && savedAddr.address) {
             setGuestAddress(savedAddr.address);
@@ -62,7 +61,6 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
     }
   }, [isOpen]);
 
-  // Handle pre-filling address when guest inputs an email used in prior orders
   const handleEmailBlur = () => {
     if (guestEmail.trim()) {
       const savedAddr = getCustomerSavedAddress(guestEmail.trim());
@@ -144,12 +142,10 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       createdAt: formattedTime,
     };
 
-    // Calculate Toss Payments VAT (10% standard VAT)
     const vatAmount = Math.round((totalPrice * 0.1) / 1.1);
     const paymentKey = `tvV8_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
     const txId = `TX_${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}_${Math.floor(100000 + Math.random() * 900000)}`;
 
-    // Toss Payment Record with all 13 fields requested by USER
     const paymentRecord: TossPaymentRecord = {
       order_id: orderId,
       user_id: guestEmail.trim(),
@@ -166,10 +162,8 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       created_at: new Date().toISOString(),
     };
 
-    // Save Payment Transaction to Supabase DB 'payments' table (13 fields)
     await savePaymentRecord(paymentRecord);
 
-    // Save & Map Customer Shipping Address to Customer ID (email) for Future Orders
     await saveCustomerAddress({
       user_id: guestEmail.trim(),
       recipient_name: guestName.trim(),
@@ -178,19 +172,16 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       is_default: true,
     });
 
-    // Save order to localStorage
     const savedOrders = localStorage.getItem('shop_orders');
     let ordersList: Order[] = savedOrders ? JSON.parse(savedOrders) : initialOrders;
     ordersList = [newOrder, ...ordersList];
     localStorage.setItem('shop_orders', JSON.stringify(ordersList));
 
-    // Update Customer Tier Automatically based on Backend Policy
     const tierResult = await updateCustomerTierOnOrder(guestEmail.trim());
     if (tierResult.upgraded) {
       alert(`🎉 축하합니다! 회원님의 결제 횟수 조건 충족으로 [${tierResult.newTier}] 등급으로 자동 승급되셨습니다!\n(승급 축하 보너스 적립금 +${tierResult.bonusPoints?.toLocaleString()}P 지급 완료)`);
     }
 
-    // Clear Cart
     saveCart([]);
     setCompletedOrder(newOrder);
     setCheckoutStep('success');
@@ -199,19 +190,19 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="bg-[#141414] rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-[#D6A56D]/30 max-h-[90vh] flex flex-col text-white">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[22px] text-slate-800">shopping_bag</span>
-            <h2 className="text-xl font-bold text-slate-900">
-              {checkoutStep === 'cart' && `장바구니 (${cartItems.length}개)`}
-              {checkoutStep === 'checkout' && '주문 및 결제 작성 (Checkout)'}
-              {checkoutStep === 'success' && '주문 완료 (Order Placed)'}
+            <span className="material-symbols-outlined text-[22px] text-[#D6A56D]">shopping_bag</span>
+            <h2 className="text-xl font-serif font-bold text-white">
+              {checkoutStep === 'cart' && `Shopping Bag (${cartItems.length})`}
+              {checkoutStep === 'checkout' && 'Checkout (주문 및 결제 작성)'}
+              {checkoutStep === 'success' && 'Order Placed (주문 완료)'}
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-700 transition-colors">
+          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white transition-colors">
             <span className="material-symbols-outlined text-[24px]">close</span>
           </button>
         </div>
@@ -221,8 +212,8 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
           <div className="flex-1 flex flex-col justify-between overflow-hidden">
             {cartItems.length === 0 ? (
               <div className="py-16 text-center text-slate-400 my-auto">
-                <span className="material-symbols-outlined text-[48px] text-slate-300 mb-2">remove_shopping_cart</span>
-                <p className="text-sm font-bold text-slate-600">장바구니가 비어 있습니다.</p>
+                <span className="material-symbols-outlined text-[48px] text-[#D6A56D] mb-2">remove_shopping_cart</span>
+                <p className="text-sm font-bold text-white">장바구니가 비어 있습니다.</p>
                 <p className="text-xs text-slate-400 mt-1">마음에 드는 원데이즈뷰티 제품을 담아보세요!</p>
               </div>
             ) : (
@@ -230,26 +221,26 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
                 {cartItems.map((item) => {
                   const itemPrice = item.salePrice || item.price;
                   return (
-                    <div key={item.productId} className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex gap-4 items-center">
-                      <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0" />
+                    <div key={item.productId} className="p-4 bg-[#1E1E1E] border border-white/10 rounded-2xl flex gap-4 items-center">
+                      <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-xl object-cover border border-white/10 shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-bold text-amber-800 uppercase">{item.brand}</p>
-                        <h4 className="font-bold text-sm text-slate-900 truncate">{item.name}</h4>
-                        <p className="text-xs text-slate-600 mt-0.5">{itemPrice.toLocaleString()}원</p>
+                        <p className="text-[10px] font-bold text-[#D6A56D] uppercase">{item.brand}</p>
+                        <h4 className="font-bold text-sm text-white truncate">{item.name}</h4>
+                        <p className="text-xs text-[#D81B60] font-serif font-bold mt-0.5">₩{itemPrice.toLocaleString()}</p>
                       </div>
 
                       {/* Quantity Controls */}
-                      <div className="flex items-center border border-slate-300 rounded-lg bg-white overflow-hidden shrink-0">
+                      <div className="flex items-center border border-white/20 rounded-lg bg-[#0B0B0B] overflow-hidden shrink-0">
                         <button
                           onClick={() => handleUpdateQuantity(item.productId, -1)}
-                          className="px-2 py-1 text-slate-600 hover:bg-slate-100 font-bold"
+                          className="px-2.5 py-1 text-slate-300 hover:bg-white/10 font-bold text-xs"
                         >
                           -
                         </button>
-                        <span className="px-3 text-xs font-bold text-slate-900">{item.quantity}</span>
+                        <span className="px-3 text-xs font-bold text-white">{item.quantity}</span>
                         <button
                           onClick={() => handleUpdateQuantity(item.productId, 1)}
-                          className="px-2 py-1 text-slate-600 hover:bg-slate-100 font-bold"
+                          className="px-2.5 py-1 text-slate-300 hover:bg-white/10 font-bold text-xs"
                         >
                           +
                         </button>
@@ -257,7 +248,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
 
                       <button
                         onClick={() => handleRemoveItem(item.productId)}
-                        className="p-1 text-slate-400 hover:text-rose-600 transition-colors shrink-0"
+                        className="p-1 text-slate-400 hover:text-[#D81B60] transition-colors shrink-0"
                       >
                         <span className="material-symbols-outlined text-[18px]">delete</span>
                       </button>
@@ -268,16 +259,16 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
             )}
 
             {cartItems.length > 0 && (
-              <div className="pt-4 border-t border-slate-100 mt-4 space-y-4">
-                <div className="flex justify-between items-center bg-slate-900 text-white p-4 rounded-2xl">
-                  <span className="text-xs font-bold">총 결제 금액</span>
-                  <span className="text-xl font-bold">{totalPrice.toLocaleString()}원</span>
+              <div className="pt-4 border-t border-white/10 mt-4 space-y-4">
+                <div className="flex justify-between items-center bg-[#0B0B0B] border border-[#D6A56D]/30 p-4 rounded-2xl">
+                  <span className="text-xs font-bold text-[#D6A56D] uppercase">Total Amount</span>
+                  <span className="text-xl font-serif font-bold text-white">₩{totalPrice.toLocaleString()}</span>
                 </div>
                 <button
                   onClick={() => setCheckoutStep('checkout')}
-                  className="w-full py-3.5 bg-slate-900 text-white font-bold rounded-xl text-sm hover:bg-slate-800 transition-colors shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white font-bold rounded-xl text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(216,27,96,0.4)] flex items-center justify-center gap-2"
                 >
-                  주문서 작성하기 ➔
+                  Proceed to Checkout ➔
                 </button>
               </div>
             )}
@@ -287,182 +278,159 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
         {/* STEP 2: CHECKOUT (MEMBER / GUEST) */}
         {checkoutStep === 'checkout' && (
           <form onSubmit={handlePlaceOrder} className="flex-1 overflow-y-auto space-y-4 pr-2">
-            {/* Order Type Tabs */}
-            <div className="flex bg-slate-100 p-1 rounded-xl">
+            <div className="flex bg-[#0B0B0B] p-1 rounded-xl border border-white/10">
               <button
                 type="button"
                 onClick={() => setOrderType('member')}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${
-                  orderType === 'member' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'
+                  orderType === 'member' ? 'bg-[#D81B60] text-white shadow-md' : 'text-slate-400'
                 }`}
               >
-                회원 주문
+                회원 주문 (Member)
               </button>
               <button
                 type="button"
                 onClick={() => setOrderType('guest')}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${
-                  orderType === 'guest' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'
+                  orderType === 'guest' ? 'bg-[#D81B60] text-white shadow-md' : 'text-slate-400'
                 }`}
               >
-                비회원 주문 (Guest Checkout)
+                비회원 주문 (Guest)
               </button>
             </div>
 
-            {orderType === 'guest' && (
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-amber-700">info</span>
-                <span>※ 비회원 주문은 제출하신 **이메일 주소**와 **발급되는 주문번호**로 배송 조회가 가능합니다.</span>
-              </div>
-            )}
-
-            <div className="space-y-3">
+            <div className="space-y-3 bg-[#1E1E1E] p-4 rounded-2xl border border-white/10">
+              <h4 className="text-xs font-bold text-[#D6A56D] uppercase tracking-wider">주문자 및 배송지 정보</h4>
+              
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">주문자 성명 <span className="text-rose-500">*</span></label>
-                <input
-                  type="text"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  placeholder="홍길동"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-900"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">주문 확인용 이메일 주소 <span className="text-rose-500">*</span></label>
+                <label className="block text-xs text-slate-300 mb-1">이메일 주소 (Email)</label>
                 <input
                   type="email"
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
                   onBlur={handleEmailBlur}
-                  placeholder="order_guest@example.com"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-900"
+                  placeholder="name@example.com"
+                  className="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
                   required
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">연락처</label>
-                <input
-                  type="tel"
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                  placeholder="010-1234-5678"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-900"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-slate-300 mb-1">수령인 성명 (Name)</label>
+                  <input
+                    type="text"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    placeholder="홍길동"
+                    className="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-300 mb-1">연락처 (Phone)</label>
+                  <input
+                    type="tel"
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    placeholder="010-1234-5678"
+                    className="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">배송지 주소 <span className="text-rose-500">*</span></label>
-                <input
-                  type="text"
+                <label className="block text-xs text-slate-300 mb-1">배송지 주소 (Shipping Address)</label>
+                <textarea
                   value={guestAddress}
                   onChange={(e) => setGuestAddress(e.target.value)}
-                  placeholder="서울특별시 강남구 테헤란로..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-900"
+                  placeholder="도로명 주소 및 상세주소 입력"
+                  rows={2}
+                  className="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
                   required
                 />
-              </div>
-
-              {/* Toss Payments PG Method Selector */}
-              <div className="bg-blue-50/60 p-4 rounded-2xl border border-blue-100 space-y-2">
-                <label className="block text-xs font-bold text-blue-900 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[18px] text-blue-600">credit_card</span>
-                  토스페이먼츠 (Toss Payments) 결제 수단 선택
-                </label>
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  {[
-                    { id: '카드', name: '신용·체크카드' },
-                    { id: '토스페이', name: '토스페이 (TossPay)' },
-                    { id: '계좌이체', name: '실시간 계좌이체' },
-                    { id: '가상계좌', name: '가상계좌 (무통장)' },
-                  ].map((m) => (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => setPaymentMethod(m.id)}
-                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all text-left flex items-center justify-between ${
-                        paymentMethod === m.id
-                          ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span>{m.name}</span>
-                      {paymentMethod === m.id && (
-                        <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 flex gap-3">
+            <div className="space-y-3 bg-[#1E1E1E] p-4 rounded-2xl border border-white/10">
+              <h4 className="text-xs font-bold text-[#D6A56D] uppercase tracking-wider">결제 수단 선택 (Toss Payments 연동)</h4>
+              <div className="grid grid-cols-3 gap-2">
+                {['카드', '가상계좌', '간편결제'].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setPaymentMethod(m)}
+                    className={`py-2 text-xs font-bold rounded-xl border transition-colors ${
+                      paymentMethod === m
+                        ? 'border-[#D81B60] bg-[#D81B60]/20 text-[#D81B60]'
+                        : 'border-white/10 bg-[#0B0B0B] text-slate-400'
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-2 flex gap-3">
               <button
                 type="button"
                 onClick={() => setCheckoutStep('cart')}
-                className="py-3 px-5 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-50"
+                className="py-3 px-5 border border-white/20 text-slate-300 font-bold rounded-xl text-xs uppercase"
               >
-                장바구니로 돌아가기
+                Back to Bag
               </button>
               <button
                 type="submit"
-                className="flex-1 py-3 bg-slate-900 text-white font-bold rounded-xl text-xs hover:bg-slate-800 transition-colors shadow-md"
+                className="flex-1 py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white font-bold rounded-xl text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(216,27,96,0.4)]"
               >
-                {totalPrice.toLocaleString()}원 결제 및 주문완료
+                Pay ₩{totalPrice.toLocaleString()}
               </button>
             </div>
           </form>
         )}
 
-        {/* STEP 3: ORDER SUCCESS */}
+        {/* STEP 3: SUCCESS */}
         {checkoutStep === 'success' && completedOrder && (
-          <div className="text-center py-6 space-y-6">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+          <div className="space-y-6 text-center py-6 my-auto">
+            <div className="w-16 h-16 bg-[#D81B60]/20 border border-[#D81B60] text-[#D81B60] rounded-full flex items-center justify-center mx-auto shadow-lg">
               <span className="material-symbols-outlined text-[36px]">check_circle</span>
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-1">주문이 정상적으로 접수되었습니다!</h3>
-              <p className="text-xs text-slate-500">소중한 상품을 빠르게 배송해 드리겠습니다.</p>
+              <span className="text-xs font-bold text-[#D6A56D] uppercase tracking-widest">Toss Payments Approved</span>
+              <h3 className="text-2xl font-serif font-bold text-white mt-1">결제 및 주문이 완료되었습니다!</h3>
+              <p className="text-xs font-mono text-slate-400 mt-1">주문번호: {completedOrder.id}</p>
             </div>
 
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-left space-y-2 text-xs">
-              <div className="flex justify-between font-bold border-b border-slate-200 pb-2 text-slate-900">
-                <span>주문 번호 (Order ID)</span>
-                <span className="font-mono text-amber-800">{completedOrder.id}</span>
-              </div>
-              <div className="flex justify-between text-slate-600 pt-1">
-                <span>주문자 / 이메일</span>
-                <span>{completedOrder.customerName} ({completedOrder.customerEmail})</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>총 결제금액</span>
-                <span className="font-bold text-slate-900">{completedOrder.totalAmount.toLocaleString()}원</span>
-              </div>
+            <div className="bg-[#1E1E1E] p-5 rounded-2xl border border-white/10 text-left text-xs space-y-2 max-w-md mx-auto">
+              <p className="text-slate-300"><strong className="text-white">수령인:</strong> {completedOrder.customerName}</p>
+              <p className="text-slate-300"><strong className="text-white">배송지:</strong> {completedOrder.shippingAddress}</p>
+              <p className="text-slate-300"><strong className="text-white">결제 금액:</strong> ₩{completedOrder.totalAmount.toLocaleString()}</p>
+              <p className="text-[#D6A56D] font-mono text-[11px] pt-2 border-t border-white/10">
+                자동 배송지 맵핑 완료 | CJ대한통운 전산에 전송되었습니다.
+              </p>
             </div>
 
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 text-left">
-              <p className="font-bold mb-1">💡 배송 조회 안내</p>
-              <p>비회원은 **마이페이지({completedOrder.customerEmail})** 및 **비회원 배송조회**에서 주문번호({completedOrder.id})를 입력하여 실시간 배송 상태를 조회할 수 있습니다.</p>
-            </div>
-
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-3 max-w-md mx-auto pt-2">
               <button
                 onClick={() => {
                   onClose();
+                  setCheckoutStep('cart');
                   navigate('/mypage');
                 }}
-                className="flex-1 py-3 bg-slate-900 text-white font-bold rounded-xl text-xs hover:bg-slate-800 shadow-sm"
+                className="flex-1 py-3 bg-[#D81B60] text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-[#A80F48] transition-colors shadow-md"
               >
-                배송조회 (마이페이지 이동)
+                Check My Orders
               </button>
               <button
-                onClick={onClose}
-                className="py-3 px-6 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-50"
+                onClick={() => {
+                  onClose();
+                  setCheckoutStep('cart');
+                }}
+                className="py-3 px-6 border border-white/20 text-slate-300 text-xs font-bold uppercase rounded-xl hover:bg-white/5"
               >
-                쇼핑 계속하기
+                Close
               </button>
             </div>
           </div>

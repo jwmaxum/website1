@@ -33,7 +33,7 @@ export const initialBrands = [
 export const initialProducts: Product[] = [
   {
     id: 'prd-1',
-    code: 'PRD-BOJ-001',
+    code: 'PRD-ONEDAYS-001',
     name: '맑은쌀선크림 : 쌀추출물+나이아시나마이드 (SPF 50+ PA++++)',
     category: '선케어 (Sun Care)',
     brand: 'Onedays Beauty (원데이즈뷰티)',
@@ -47,7 +47,7 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'prd-2',
-    code: 'PRD-BOJ-002',
+    code: 'PRD-ONEDAYS-002',
     name: '원데이즈뷰티 인삼 탄력 크림 60ml',
     category: '크림/모이스처 (Cream)',
     brand: 'Onedays Beauty (원데이즈뷰티)',
@@ -74,7 +74,7 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'prd-4',
-    code: 'PRD-BOJ-004',
+    code: 'PRD-ONEDAYS-004',
     name: '붉은팥 PDRN 모공탄력 세럼 30ml',
     category: '세럼/에센스 (Serum)',
     brand: 'Onedays Beauty (원데이즈뷰티)',
@@ -313,7 +313,7 @@ export function ProductManagement() {
       // Add
       const newPrd: Product = {
         id: `prd-${Date.now()}`,
-        code: `PRD-BOJ-${Math.floor(100 + Math.random() * 900)}`,
+        code: `PRD-ONEDAYS-${Math.floor(100 + Math.random() * 900)}`,
         name: formName.trim(),
         category: formCategory || categories[0] || '기타',
         brand: formBrand || brands[0] || '기타',
