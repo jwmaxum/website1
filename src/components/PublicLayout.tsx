@@ -219,15 +219,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
               </button>
             )}
-
-            {/* Console / Admin Link */}
-            <Link
-              to="/admin/dashboard"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold rounded-full transition-all shadow-lg hover:shadow-[0_0_15px_rgba(216,27,96,0.5)]"
-            >
-              <span className="material-symbols-outlined text-[16px]">admin_panel_settings</span>
-              <span>{t('console')}</span>
-            </Link>
           </div>
         </div>
 
@@ -264,13 +255,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 {t('shop')}
               </Link>
             )}
-            <Link
-              to="/admin/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-bold text-[#D81B60]"
-            >
-              {t('console')}
-            </Link>
           </div>
         )}
       </header>
