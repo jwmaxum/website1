@@ -10,7 +10,7 @@ function StatCard({
   value,
   icon,
   badgeText,
-  badgeColor = 'bg-slate-100 text-slate-700',
+  badgeColor = 'bg-white/10 text-slate-300',
   linkTo,
 }: {
   title: string;
@@ -21,13 +21,13 @@ function StatCard({
   linkTo?: string;
 }) {
   const CardContent = (
-    <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-all flex flex-col justify-between h-full">
+    <div className="p-6 bg-[#141414] rounded-2xl shadow-xl border border-white/10 hover:border-[#D81B60]/50 transition-all flex flex-col justify-between h-full group">
       <div className="flex justify-between items-start mb-3">
-        <span className="text-xs font-bold text-slate-500">{title}</span>
-        <span className="material-symbols-outlined text-slate-400 text-[22px]">{icon}</span>
+        <span className="text-xs font-bold text-[#D6A56D] uppercase tracking-wider">{title}</span>
+        <span className="material-symbols-outlined text-slate-400 group-hover:text-[#D81B60] text-[22px] transition-colors">{icon}</span>
       </div>
       <div className="flex items-end justify-between">
-        <h3 className="text-2xl md:text-3xl font-bold text-slate-900">{value}</h3>
+        <h3 className="text-2xl md:text-3xl font-serif font-bold text-white">{value}</h3>
         {badgeText && (
           <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${badgeColor}`}>
             {badgeText}
@@ -109,25 +109,26 @@ export function Dashboard() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 md:p-8 rounded-3xl shadow-xl flex justify-between items-center flex-wrap gap-4">
-        <div>
+      <div className="bg-gradient-to-r from-[#141414] via-[#1E1E1E] to-[#141414] text-white p-6 md:p-8 rounded-3xl border border-[#D6A56D]/30 shadow-2xl flex justify-between items-center flex-wrap gap-4 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#D81B60]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 space-y-1">
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 text-xs font-bold bg-amber-400 text-slate-900 rounded-full">
+            <span className="px-3 py-0.5 text-[10px] font-extrabold bg-[#D81B60] text-white rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(216,27,96,0.5)]">
               Live Real-Time Sync
             </span>
-            <span className="text-xs text-slate-300">ONEDAYS BEAUTY Console</span>
+            <span className="text-xs font-mono text-[#D6A56D]">ONEDAYS BEAUTY CONSOLE</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold">
+          <h2 className="text-2xl md:text-3xl font-serif font-bold text-white">
             안녕하세요, {currentAdminName}님!
           </h2>
-          <p className="text-xs md:text-sm text-slate-300 mt-1">
+          <p className="text-xs md:text-sm text-slate-300">
             현재 시스템 상에 총 **{orders.length}건의 주문**과 **{pendingInquiries.length}건의 미답변 고객 문의**가 접수되어 있습니다.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 relative z-10">
           <Link
             to="/admin/orders"
-            className="px-4 py-2.5 bg-white text-slate-900 font-bold text-xs rounded-xl hover:bg-slate-100 transition-colors shadow-sm flex items-center gap-1.5"
+            className="px-5 py-3 bg-[#D81B60] hover:bg-[#A80F48] text-white font-bold text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(216,27,96,0.3)] flex items-center gap-1.5 uppercase tracking-wider"
           >
             <span className="material-symbols-outlined text-[18px]">local_shipping</span>
             물류 & 송장관리 ➔
@@ -142,7 +143,7 @@ export function Dashboard() {
           value={`${orders.length}건`}
           icon="shopping_bag"
           badgeText="Live Orders"
-          badgeColor="bg-blue-100 text-blue-800"
+          badgeColor="bg-blue-500/20 text-blue-300 border border-blue-500/40"
           linkTo="/admin/orders"
         />
         <StatCard
@@ -150,7 +151,7 @@ export function Dashboard() {
           value={`${(totalSales / 10000).toFixed(0)}만원`}
           icon="payments"
           badgeText="Gross Sales"
-          badgeColor="bg-emerald-100 text-emerald-800"
+          badgeColor="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
           linkTo="/admin/orders"
         />
         <StatCard
@@ -158,7 +159,7 @@ export function Dashboard() {
           value={`${pendingOrders.length}건`}
           icon="local_shipping"
           badgeText={pendingOrders.length > 0 ? '배송 필요' : '정상'}
-          badgeColor={pendingOrders.length > 0 ? 'bg-amber-100 text-amber-900' : 'bg-slate-100 text-slate-600'}
+          badgeColor={pendingOrders.length > 0 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-white/10 text-slate-400'}
           linkTo="/admin/orders"
         />
         <StatCard
@@ -166,7 +167,7 @@ export function Dashboard() {
           value={`${pendingInquiries.length}건`}
           icon="forum"
           badgeText={pendingInquiries.length > 0 ? 'Action Req.' : '완료'}
-          badgeColor={pendingInquiries.length > 0 ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}
+          badgeColor={pendingInquiries.length > 0 ? 'bg-[#D81B60]/20 text-[#D81B60] border border-[#D81B60]/40' : 'bg-white/10 text-slate-400'}
           linkTo="/admin/shop"
         />
         <StatCard
@@ -174,7 +175,7 @@ export function Dashboard() {
           value={`${products.length} / ${bestsellerCount}`}
           icon="inventory_2"
           badgeText="Products"
-          badgeColor="bg-purple-100 text-purple-800"
+          badgeColor="bg-purple-500/20 text-purple-300 border border-purple-500/40"
           linkTo="/admin/products"
         />
         <StatCard
@@ -225,16 +226,16 @@ export function Dashboard() {
                     </tr>
                   ) : (
                     orders.slice(0, 5).map((ord) => (
-                      <tr key={ord.id} className="hover:bg-slate-50 transition-colors">
+                      <tr key={ord.id} className="hover:bg-white/5 transition-colors">
                         <td className="py-4 px-5">
-                          <div className="font-mono font-bold text-xs text-slate-900">{ord.id}</div>
+                          <div className="font-mono font-bold text-xs text-white">{ord.id}</div>
                           <div className="text-[11px] text-slate-400">{ord.createdAt}</div>
                         </td>
                         <td className="py-4 px-5">
-                          <div className="font-bold text-slate-900 text-xs">{ord.customerName}</div>
-                          <div className="text-[11px] text-slate-500 font-mono">{ord.customerEmail}</div>
+                          <div className="font-bold text-white text-xs">{ord.customerName}</div>
+                          <div className="text-[11px] text-slate-400 font-mono">{ord.customerEmail}</div>
                         </td>
-                        <td className="py-4 px-5 text-right font-bold text-slate-900 text-xs">
+                        <td className="py-4 px-5 text-right font-bold text-[#D6A56D] text-xs">
                           {ord.totalAmount.toLocaleString()}원
                         </td>
                         <td className="py-4 px-5 text-center">
@@ -263,44 +264,44 @@ export function Dashboard() {
             </div>
           </div>
 
-          {/* Real-time Pending Customer Inquiries */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+          {/* 1:1 Inquiries Pending Response */}
+          <div className="bg-[#141414] rounded-3xl shadow-xl border border-white/10 p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
               <div>
-                <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[20px] text-rose-600">forum</span>
-                  답변 대기 1:1 고객 문의 (Action Required Inquiries)
+                <h3 className="font-bold text-base text-white flex items-center gap-2 font-serif">
+                  <span className="material-symbols-outlined text-[20px] text-[#D81B60]">forum</span>
+                  미답변 1:1 고객 문의 ({pendingInquiries.length}건)
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">Resend 이메일 API를 통해 답변 메일이 즉시 발송됩니다.</p>
+                <p className="text-xs text-slate-400 mt-0.5">Resend 이메일 API를 통해 답변 메일이 즉시 발송됩니다.</p>
               </div>
-              <Link to="/admin/shop" className="text-xs font-bold text-slate-900 hover:underline">
+              <Link to="/admin/shop" className="text-xs font-bold text-[#D6A56D] hover:underline">
                 문의 답변하기 ➔
               </Link>
             </div>
 
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-white/5">
               {pendingInquiries.length === 0 ? (
                 <div className="p-8 text-center text-slate-400 text-xs font-bold">
                   🎉 답변 대기 중인 고객 문의가 없습니다!
                 </div>
               ) : (
                 pendingInquiries.slice(0, 4).map((inq) => (
-                  <div key={inq.id} className="p-5 hover:bg-slate-50 transition-colors flex justify-between items-start gap-4">
+                  <div key={inq.id} className="p-5 hover:bg-white/5 transition-colors flex justify-between items-start gap-4">
                     <div className="space-y-1 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded">
+                        <span className="px-2.5 py-0.5 text-[10px] font-bold bg-[#D81B60]/20 text-[#D81B60] border border-[#D81B60]/40 rounded">
                           {inq.category}
                         </span>
-                        <span className="font-bold text-xs text-slate-900">{inq.subject}</span>
+                        <span className="font-bold text-xs text-white">{inq.subject}</span>
                       </div>
-                      <p className="text-xs text-slate-500 line-clamp-1">{inq.message}</p>
-                      <p className="text-[11px] text-slate-400">
+                      <p className="text-xs text-slate-300 line-clamp-1">{inq.message}</p>
+                      <p className="text-[11px] text-slate-400 font-mono">
                         작성자: {inq.customerName} ({inq.customerEmail}) | {inq.createdAt}
                       </p>
                     </div>
                     <Link
                       to="/admin/shop"
-                      className="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-colors shrink-0"
+                      className="px-3.5 py-1.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold rounded-lg transition-colors shrink-0"
                     >
                       답변 작성
                     </Link>
@@ -314,16 +315,16 @@ export function Dashboard() {
         {/* Right Column: Quick System Shortcuts & Active Accounts */}
         <div className="space-y-8">
           {/* Quick Management Shortcuts */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-4">
-            <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-              <span className="material-symbols-outlined text-[20px] text-slate-700">bolt</span>
+          <div className="bg-[#141414] rounded-3xl shadow-xl border border-white/10 p-6 space-y-4">
+            <h3 className="font-bold text-base text-white flex items-center gap-2 border-b border-white/10 pb-3 font-serif">
+              <span className="material-symbols-outlined text-[20px] text-[#D6A56D]">bolt</span>
               빠른 관리 메뉴 (Quick Actions)
             </h3>
 
             <div className="grid grid-cols-1 gap-2.5 text-xs font-bold">
               <Link
                 to="/admin/products"
-                className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 text-slate-800 flex items-center justify-between transition-all"
+                className="p-3.5 bg-[#1E1E1E] hover:bg-[#D81B60] hover:text-white text-slate-200 rounded-2xl border border-white/5 flex items-center justify-between transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">inventory_2</span>
@@ -333,7 +334,7 @@ export function Dashboard() {
               </Link>
               <Link
                 to="/admin/orders"
-                className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 text-slate-800 flex items-center justify-between transition-all"
+                className="p-3.5 bg-[#1E1E1E] hover:bg-[#D81B60] hover:text-white text-slate-200 rounded-2xl border border-white/5 flex items-center justify-between transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">local_shipping</span>
@@ -343,7 +344,7 @@ export function Dashboard() {
               </Link>
               <Link
                 to="/admin/shop"
-                className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 text-slate-800 flex items-center justify-between transition-all"
+                className="p-3.5 bg-[#1E1E1E] hover:bg-[#D81B60] hover:text-white text-slate-200 rounded-2xl border border-white/5 flex items-center justify-between transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">shopping_cart</span>
@@ -353,7 +354,7 @@ export function Dashboard() {
               </Link>
               <Link
                 to="/admin/content"
-                className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 text-slate-800 flex items-center justify-between transition-all"
+                className="p-3.5 bg-[#1E1E1E] hover:bg-[#D81B60] hover:text-white text-slate-200 rounded-2xl border border-white/5 flex items-center justify-between transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">article</span>
@@ -363,7 +364,7 @@ export function Dashboard() {
               </Link>
               <Link
                 to="/admin/site"
-                className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 text-slate-800 flex items-center justify-between transition-all"
+                className="p-3.5 bg-[#1E1E1E] hover:bg-[#D81B60] hover:text-white text-slate-200 rounded-2xl border border-white/5 flex items-center justify-between transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">mail</span>
@@ -373,7 +374,7 @@ export function Dashboard() {
               </Link>
               <Link
                 to="/admin/system"
-                className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 text-slate-800 flex items-center justify-between transition-all"
+                className="p-3.5 bg-[#1E1E1E] hover:bg-[#D81B60] hover:text-white text-slate-200 rounded-2xl border border-white/5 flex items-center justify-between transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">manage_accounts</span>
@@ -385,26 +386,26 @@ export function Dashboard() {
           </div>
 
           {/* Active Staff Accounts List */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px] text-slate-700">group</span>
+          <div className="bg-[#141414] rounded-3xl shadow-xl border border-white/10 p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+              <h3 className="font-bold text-base text-white flex items-center gap-2 font-serif">
+                <span className="material-symbols-outlined text-[20px] text-[#D6A56D]">group</span>
                 직원 및 관리자 계정 ({staffList.length}명)
               </h3>
-              <Link to="/admin/system" className="text-xs text-slate-500 font-bold hover:underline">
+              <Link to="/admin/system" className="text-xs text-[#D81B60] font-bold hover:underline">
                 관리 ➔
               </Link>
             </div>
 
             <div className="space-y-2.5">
               {staffList.map((st) => (
-                <div key={st.id} className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div key={st.id} className="p-3 bg-[#1E1E1E] rounded-2xl border border-white/5 flex justify-between items-center">
                   <div>
-                    <span className="font-bold text-xs text-slate-900 block">{st.name} ({st.id})</span>
+                    <span className="font-bold text-xs text-white block">{st.name} ({st.id})</span>
                     <span className="text-[11px] text-slate-400">{st.department || '운영팀'}</span>
                   </div>
                   <span className={`px-2 py-0.5 text-[10px] font-bold rounded ${
-                    st.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 'bg-slate-200 text-slate-700'
+                    st.role === 'superadmin' ? 'bg-[#D81B60]/20 text-[#D81B60] border border-[#D81B60]/40' : 'bg-white/10 text-slate-300'
                   }`}>
                     {st.role === 'superadmin' ? '최고관리자' : '직원'}
                   </span>

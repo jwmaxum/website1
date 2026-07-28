@@ -4,7 +4,7 @@ import { Product, initialProducts, initialCategories } from './ProductManagement
 
 export function LandingPage() {
   const [searchParams] = useSearchParams();
-  const filterParam = searchParams.get('filter'); // 'bestsellers' or category name
+  const filterParam = searchParams.get('filter');
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -13,7 +13,6 @@ export function LandingPage() {
   const [cartCount, setCartCount] = useState<number>(0);
 
   useEffect(() => {
-    // Load products from localStorage
     const savedProducts = localStorage.getItem('shop_products');
     if (savedProducts) {
       try {
@@ -25,7 +24,6 @@ export function LandingPage() {
       setProducts(initialProducts);
     }
 
-    // Load categories
     const savedCategories = localStorage.getItem('shop_categories');
     if (savedCategories) {
       try {
@@ -38,7 +36,6 @@ export function LandingPage() {
     }
   }, []);
 
-  // Handle URL search params if navigated from Header links
   useEffect(() => {
     if (filterParam === 'bestsellers') {
       setSelectedCategory('베스트셀러');
@@ -62,129 +59,255 @@ export function LandingPage() {
   };
 
   return (
-    <div className="animate-in fade-in duration-700 pb-16">
-      {/* Hero Banner Section */}
-      <section className="mt-6 mb-16 w-full h-[55vh] md:h-[75vh] relative flex items-center border border-slate-200 overflow-hidden rounded-2xl">
-        <img 
-          src="https://lh3.googleusercontent.com/aida/AP1WRLtwbpLR0OrlYn4dNF3tqH_42Aj4oMGBojFifs3u0hC1FGVJZitGN2H2vJNH1c97S7473i6ycdPbD_oUZX62wI6GTJ1I1j-ciBWMH2LJbHk7cg857jBsi8xSaC4_CC-BiNnzLXvoDdX0ZNA3FCreYP-RqDDvMK303JTP_8bfq00cq1N3lfOZSvC6TBZUzvitSmd7HwqfQx86VqCwSGclWFvuVNUBajQAdv3Lz24O1rZQa8G148-0AD7JvROx" 
-          alt="Hero Banner" 
-          className="absolute inset-0 w-full h-full object-cover z-0" 
+    <div className="bg-[#050505] text-[#FAFAFA] min-h-screen">
+      {/* 1. Cinematic Full-Screen Hero (100vh) */}
+      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-[#050505] pt-20">
+        {/* Background Ambient Pink & Rose Gold Glow */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#D81B60]/15 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-[#D6A56D]/10 rounded-full blur-[100px] pointer-events-none" />
+
+        {/* Hero Background Image / Video */}
+        <img
+          src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=1920&auto=format&fit=crop"
+          alt="Luxury Cosmetic Hero"
+          className="absolute inset-0 w-full h-full object-cover opacity-35 scale-105 filter brightness-75 contrast-125"
         />
-        <div className="relative z-10 p-8 md:p-14 max-w-lg bg-white/80 backdrop-blur-md border border-white/60 ml-4 md:ml-12 rounded-xl shadow-lg">
-          <span className="inline-block text-xs font-bold text-amber-800 tracking-widest uppercase mb-3 bg-amber-50 px-2.5 py-1 rounded-md">
-            New Onedays Arrival
-          </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-4 leading-tight">
-            무결점 피부<br />붉은팥 PDRN 세럼
-          </h1>
-          <p className="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-            조선시대 한방 성분과 현대 비건 PDRN의 모공 탄력 시너지 케어.
-          </p>
-          <a
-            href="#product-catalog"
-            className="inline-block bg-slate-900 text-white text-xs font-bold px-7 py-3.5 uppercase tracking-widest hover:bg-slate-700 transition-colors rounded-lg shadow-sm"
-          >
-            Discover Collection
-          </a>
-        </div>
-      </section>
 
-      {/* Best Sellers Section */}
-      <section className="mb-20">
-        <div className="flex justify-between items-end mb-8 border-b border-slate-200 pb-4">
-          <div>
-            <span className="text-xs font-bold text-amber-700 uppercase tracking-widest">Editor's Pick</span>
-            <h2 className="text-3xl md:text-4xl font-serif text-slate-900">Best Sellers (베스트 셀러)</h2>
+        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Hero Left Content */}
+          <div className="lg:col-span-7 space-y-8 text-left">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-[#D6A56D]/40 text-[#D6A56D] text-xs font-bold uppercase tracking-[0.3em] backdrop-blur-md">
+              High Fashion Flagship Collection
+            </span>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif leading-[1.1] tracking-tight text-white font-light">
+              DISCOVER LUXURY <br />
+              <span className="italic font-normal text-[#D6A56D]">BEAUTY BEYOND</span> SKIN
+            </h1>
+
+            <p className="text-sm md:text-base text-[#B7B7B7] max-w-xl font-light leading-relaxed">
+              조선 시대의 고귀한 한방 성분과 현대 더마톨로지 스킨케어 공학의 만남.
+              비할 데 없는 럭셔리 텍스처와 피부 본연의 투명한 빛을 선사합니다.
+            </p>
+
+            <div className="flex flex-wrap gap-4 pt-4">
+              <a
+                href="#product-catalog"
+                className="px-8 py-4 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-[0.25em] rounded-xl transition-all shadow-[0_0_30px_rgba(216,27,96,0.4)] hover:shadow-[0_0_40px_rgba(216,27,96,0.6)] border border-[#D81B60]"
+              >
+                Shop Collection
+              </a>
+              <a
+                href="#brand-story"
+                className="px-8 py-4 bg-transparent hover:bg-[#D6A56D]/10 text-[#D6A56D] hover:text-white text-xs font-bold uppercase tracking-[0.25em] rounded-xl transition-all border border-[#D6A56D]/50"
+              >
+                Discover Story
+              </a>
+            </div>
           </div>
-          <button
-            onClick={() => {
-              setSelectedCategory('베스트셀러');
-              const elem = document.getElementById('product-catalog');
-              if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest flex items-center gap-1"
-          >
-            전체 보기 +
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {bestsellers.slice(0, 3).map((prd, idx) => (
-            <article
-              key={prd.id}
-              onClick={() => setSelectedProduct(prd)}
-              className="group cursor-pointer bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300"
-            >
-              <div className="w-full aspect-[4/3] bg-slate-50 relative overflow-hidden flex items-center justify-center border-b border-slate-100">
-                <div className="absolute top-4 left-4 z-10 flex gap-1">
-                  <span className="bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs">
-                    BEST #{idx + 1}
+
+          {/* Hero Right Visual Card */}
+          <div className="lg:col-span-5 hidden lg:block">
+            <div className="relative p-2 rounded-3xl bg-gradient-to-b from-[#D6A56D]/30 via-white/5 to-[#D81B60]/30 shadow-2xl">
+              <div className="bg-[#141414] rounded-[22px] overflow-hidden border border-white/10 p-6 space-y-4">
+                <div className="w-full aspect-[4/5] rounded-xl overflow-hidden relative">
+                  <span className="absolute top-3 left-3 bg-[#D6A56D] text-[#050505] text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest z-10">
+                    Flagship Arrival
                   </span>
-                  {prd.salePrice && (
-                    <span className="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">
-                      SALE
-                    </span>
-                  )}
+                  <img
+                    src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80"
+                    alt="Featured Product"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
                 </div>
-                <img 
-                  src={prd.imageUrl} 
-                  alt={prd.name} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                />
-              </div>
-              <div className="p-5">
-                <p className="text-[11px] font-bold text-amber-800 uppercase tracking-wide mb-1">{prd.brand}</p>
-                <h3 className="text-base text-slate-900 font-semibold mb-2 line-clamp-1 group-hover:text-amber-800 transition-colors">
-                  {prd.name}
-                </h3>
-                <div className="flex items-center justify-between mt-3">
+                <div className="flex justify-between items-end pt-2">
                   <div>
-                    {prd.salePrice ? (
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-slate-900">{prd.salePrice.toLocaleString()}원</span>
-                        <span className="text-xs text-slate-400 line-through">{prd.price.toLocaleString()}원</span>
-                      </div>
-                    ) : (
-                      <span className="text-lg font-bold text-slate-900">{prd.price.toLocaleString()}원</span>
-                    )}
+                    <p className="text-[11px] font-bold text-[#D6A56D] uppercase tracking-wider">Signature Elixir</p>
+                    <h3 className="text-lg font-serif font-bold text-white mt-1">붉은팥 PDRN 모공탄력 세럼</h3>
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">재고 {prd.stock}개</span>
+                  <span className="text-xl font-serif font-bold text-white">₩22,100</span>
                 </div>
               </div>
-            </article>
-          ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Main Product Catalog Section */}
-      <section id="product-catalog" className="mb-20 pt-8 border-t border-slate-200">
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <h2 className="text-3xl md:text-4xl font-serif text-slate-900 mb-3">제품 컬렉션 (Product Catalog)</h2>
-          <p className="text-sm text-slate-500">관리자 콘솔에서 등록된 모든 신제품 및 카테고리를 실시간으로 만나보세요.</p>
+      {/* 2. Brand Story Section */}
+      <section id="brand-story" className="py-28 px-6 md:px-12 max-w-[1536px] mx-auto border-t border-white/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-6 relative">
+            <div className="relative rounded-3xl overflow-hidden border border-[#D6A56D]/30 shadow-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1608248597260-50c39f70a784?q=80&w=1000&auto=format&fit=crop"
+                alt="Brand Craftsmanship"
+                className="w-full h-[520px] object-cover filter brightness-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+              <div className="absolute bottom-8 left-8 right-8 p-6 bg-[#141414]/80 backdrop-blur-md rounded-2xl border border-white/10">
+                <span className="text-[10px] font-mono text-[#D6A56D] uppercase tracking-widest">Heritage Craftsmanship</span>
+                <p className="text-sm font-serif italic text-slate-200 mt-1">"Quiet elegance, profound dermatological efficacy."</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-6 space-y-6">
+            <span className="text-xs font-bold text-[#D81B60] uppercase tracking-[0.25em]">Our Philosophy</span>
+            <h2 className="text-4xl md:text-5xl font-serif text-white leading-tight">
+              KOREAN HERITAGE MEETS <br />
+              <span className="italic text-[#D6A56D]">HIGH FASHION</span> DERMATOLOGY
+            </h2>
+            <p className="text-sm md:text-base text-[#B7B7B7] font-light leading-relaxed">
+              자연에서 엄선한 최상급 원료(인삼, 쌀겨수, 붉은팥 PDRN)에 현대 피부 과학의 정교함을 더했습니다.
+              피부에 부담 없는 100% 클린 비건 처방으로 매일 완성하는 독보적인 스킨케어 의식을 선사합니다.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-6 pt-4 border-t border-white/10">
+              <div>
+                <span className="text-3xl font-serif text-[#D6A56D] font-bold">100%</span>
+                <p className="text-xs text-[#B7B7B7] uppercase tracking-wider mt-1">Vegan Formula Certified</p>
+              </div>
+              <div>
+                <span className="text-3xl font-serif text-[#D6A56D] font-bold">60+</span>
+                <p className="text-xs text-[#B7B7B7] uppercase tracking-wider mt-1">Global Luxury Outlets</p>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <Link
+                to="/company"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-white/5 hover:bg-[#D81B60] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all border border-white/20 hover:border-[#D81B60]"
+              >
+                <span>Read Full Philosophy</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Signature Collection (Luxury Masonry Layout) */}
+      <section className="py-24 px-6 md:px-12 max-w-[1536px] mx-auto border-t border-white/10">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <span className="text-xs font-bold text-[#D6A56D] uppercase tracking-[0.3em]">Signature Line</span>
+          <h2 className="text-4xl md:text-5xl font-serif text-white">THE MASONRY SELECTION</h2>
+          <p className="text-xs md:text-sm text-[#B7B7B7] font-light">엄선된 시그니처 럭셔리 라인업을 에디토리얼 비주얼로 경험해 보세요.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Masonry Big Item 1 */}
+          <div className="md:col-span-7 bg-[#141414] rounded-3xl border border-white/10 overflow-hidden relative group shadow-2xl">
+            <div className="h-[480px] overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80"
+                alt="Signature Collection 1"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108 filter brightness-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+            </div>
+            <div className="p-8 absolute bottom-0 left-0 right-0 flex justify-between items-end">
+              <div>
+                <span className="text-[10px] font-bold text-[#D81B60] uppercase tracking-widest">Iconic Cream</span>
+                <h3 className="text-2xl font-serif text-white font-bold mt-1">인삼 탄력 크림 60ml</h3>
+                <p className="text-xs text-[#B7B7B7] mt-1">깊은 영양감으로 주름과 장벽을 탄탄하게 케어</p>
+              </div>
+              <span className="text-2xl font-serif font-bold text-[#D6A56D]">₩20,400</span>
+            </div>
+          </div>
+
+          {/* Masonry Big Item 2 */}
+          <div className="md:col-span-5 bg-[#141414] rounded-3xl border border-white/10 overflow-hidden relative group shadow-2xl">
+            <div className="h-[480px] overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80"
+                alt="Signature Collection 2"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108 filter brightness-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+            </div>
+            <div className="p-8 absolute bottom-0 left-0 right-0 flex justify-between items-end">
+              <div>
+                <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-widest">Global Bestseller</span>
+                <h3 className="text-xl font-serif text-white font-bold mt-1">맑은쌀선크림 (SPF 50+)</h3>
+              </div>
+              <span className="text-xl font-serif font-bold text-[#D6A56D]">₩15,300</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Luxury Editorial Section (Vogue Magazine Layout) */}
+      <section className="py-24 bg-[#0B0B0B] border-t border-white/10">
+        <div className="max-w-[1536px] mx-auto px-6 md:px-12">
+          <div className="bg-gradient-to-r from-[#141414] via-[#1E1E1E] to-[#141414] rounded-3xl border border-[#D6A56D]/30 p-8 md:p-16 relative overflow-hidden shadow-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-7 space-y-6">
+                <span className="inline-block px-3.5 py-1 rounded-full bg-[#D81B60]/20 border border-[#D81B60]/50 text-[#D81B60] text-xs font-bold uppercase tracking-widest">
+                  EDITORIAL FEATURE — VOGUE LUXURY
+                </span>
+                <h2 className="text-4xl md:text-6xl font-serif text-white leading-tight">
+                  THE NEW DEFINITION <br />
+                  <span className="italic text-[#D6A56D]">OF K-BEAUTY ELEGANCE</span>
+                </h2>
+                <p className="text-sm text-[#B7B7B7] leading-relaxed font-light">
+                  "보그 라이프스타일 매거진 선정 2026년 가장 주목받는 클린 뷰티 브랜드.
+                  정제된 블랙 앤 로즈 골드 비주얼과 압도적인 피부 효능의 조화."
+                </p>
+                <div className="pt-4">
+                  <Link
+                    to="/media"
+                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-[0_0_20px_rgba(216,27,96,0.3)]"
+                  >
+                    Read Editorial Article
+                  </Link>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="rounded-2xl overflow-hidden border border-white/20 shadow-2xl relative aspect-[3/4]">
+                  <img
+                    src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
+                    alt="Editorial Model"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/80 via-transparent to-transparent" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Main Product Catalog Section (Dark Cards `#141414` + Rose Gold Badges) */}
+      <section id="product-catalog" className="py-28 px-6 md:px-12 max-w-[1536px] mx-auto border-t border-white/10">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <span className="text-xs font-bold text-[#D81B60] uppercase tracking-[0.3em]">Flagship Boutique</span>
+          <h2 className="text-4xl md:text-5xl font-serif text-white">THE PRODUCT COLLECTION</h2>
+          <p className="text-xs md:text-sm text-[#B7B7B7] font-light">원데이즈뷰티의 모든 컬렉션을 라이프스타일에 맞게 탐색하세요.</p>
         </div>
 
         {/* Category Tabs */}
-        <div className="flex justify-center items-center gap-2 mb-10 flex-wrap">
+        <div className="flex justify-center items-center gap-3 mb-12 flex-wrap">
           <button
             onClick={() => setSelectedCategory('전체')}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${
+            className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all uppercase tracking-wider ${
               selectedCategory === '전체'
-                ? 'bg-slate-900 text-white shadow-md'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-[#D81B60] text-white shadow-[0_0_20px_rgba(216,27,96,0.4)]'
+                : 'bg-[#141414] text-[#B7B7B7] hover:bg-[#1E1E1E] border border-white/10'
             }`}
           >
-            전체 보기 ({products.filter((p) => p.status !== '숨김').length})
+            All Products ({products.filter((p) => p.status !== '숨김').length})
           </button>
           
           <button
             onClick={() => setSelectedCategory('베스트셀러')}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-1 ${
+            className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all uppercase tracking-wider flex items-center gap-1.5 ${
               selectedCategory === '베스트셀러'
-                ? 'bg-amber-500 text-white shadow-md'
-                : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
+                ? 'bg-[#D6A56D] text-[#050505] shadow-[0_0_20px_rgba(214,165,109,0.4)]'
+                : 'bg-[#141414] text-[#D6A56D] hover:bg-[#1E1E1E] border border-[#D6A56D]/30'
             }`}
           >
-            ⭐ 베스트셀러 ({bestsellers.length})
+            ★ Bestsellers ({bestsellers.length})
           </button>
 
           {categories.map((cat) => {
@@ -193,10 +316,10 @@ export function LandingPage() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${
+                className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all uppercase tracking-wider ${
                   selectedCategory === cat
-                    ? 'bg-slate-900 text-white shadow-md'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-[#D81B60] text-white shadow-[0_0_20px_rgba(216,27,96,0.4)]'
+                    : 'bg-[#141414] text-[#B7B7B7] hover:bg-[#1E1E1E] border border-white/10'
                 }`}
               >
                 {cat} ({count})
@@ -207,58 +330,67 @@ export function LandingPage() {
 
         {/* Product Cards Grid */}
         {filteredProducts.length === 0 ? (
-          <div className="py-16 text-center text-slate-400 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="material-symbols-outlined text-[40px] mb-2">inventory_2</span>
-            <p className="text-sm font-bold">해당 카테고리에 등록된 제품이 없습니다.</p>
+          <div className="py-20 text-center text-slate-500 bg-[#141414] rounded-3xl border border-white/10">
+            <span className="material-symbols-outlined text-[48px] text-[#D6A56D] mb-2">inventory_2</span>
+            <p className="text-sm font-bold text-white">해당 카테고리에 등록된 제품이 없습니다.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {filteredProducts.map((prd) => (
               <article
                 key={prd.id}
                 onClick={() => setSelectedProduct(prd)}
-                className="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-slate-400 transition-all duration-300 shadow-xs hover:shadow-lg flex flex-col"
+                className="group cursor-pointer bg-[#141414] rounded-3xl border border-white/10 hover:border-[#D81B60]/60 overflow-hidden transition-all duration-500 luxury-card-shadow pink-glow-hover flex flex-col justify-between"
               >
-                <div className="w-full aspect-square bg-slate-50 relative overflow-hidden flex items-center justify-center border-b border-slate-100">
+                <div className="w-full aspect-square bg-[#0B0B0B] relative overflow-hidden flex items-center justify-center border-b border-white/5">
                   {prd.isBestseller && (
-                    <span className="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs z-10">
+                    <span className="absolute top-4 left-4 bg-[#D6A56D] text-[#050505] text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-lg">
                       BEST
                     </span>
                   )}
                   {prd.status === '품절' && (
-                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-10">
-                      <span className="bg-rose-600 text-white text-xs font-bold px-3 py-1 rounded-md">품절 (Out of Stock)</span>
+                    <div className="absolute inset-0 bg-[#050505]/70 backdrop-blur-xs flex items-center justify-center z-10">
+                      <span className="bg-[#A80F48] text-white text-xs font-bold px-4 py-1.5 rounded-md uppercase tracking-wider">
+                        Out of Stock
+                      </span>
                     </div>
                   )}
                   <img
                     src={prd.imageUrl}
                     alt={prd.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
                   />
                 </div>
 
-                <div className="p-5 flex-1 flex flex-col justify-between">
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                   <div>
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{prd.brand}</span>
-                    <h3 className="text-sm font-semibold text-slate-900 mt-1 line-clamp-2 leading-snug group-hover:text-amber-800 transition-colors">
+                    <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-widest">{prd.brand}</span>
+                    <h3 className="text-base font-serif font-semibold text-white mt-1 line-clamp-2 leading-snug group-hover:text-[#D81B60] transition-colors">
                       {prd.name}
                     </h3>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                     <div>
                       {prd.salePrice ? (
-                        <div>
-                          <span className="text-base font-bold text-slate-900">{prd.salePrice.toLocaleString()}원</span>
-                          <span className="text-xs text-slate-400 line-through ml-1">{prd.price.toLocaleString()}원</span>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-lg font-serif font-bold text-[#D81B60]">₩{prd.salePrice.toLocaleString()}</span>
+                          <span className="text-xs text-slate-500 line-through">₩{prd.price.toLocaleString()}</span>
                         </div>
                       ) : (
-                        <span className="text-base font-bold text-slate-900">{prd.price.toLocaleString()}원</span>
+                        <span className="text-lg font-serif font-bold text-white">₩{prd.price.toLocaleString()}</span>
                       )}
                     </div>
-                    <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-900 transition-colors text-[20px]">
-                      shopping_bag
-                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(prd);
+                      }}
+                      className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#D81B60] text-white flex items-center justify-center transition-colors border border-white/10"
+                      title="Add to Bag"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+                    </button>
                   </div>
                 </div>
               </article>
@@ -267,75 +399,15 @@ export function LandingPage() {
         )}
       </section>
 
-      {/* Brand Story Bento Section */}
-      <section className="mb-20 border-t border-slate-200 pt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Main Story Hero Bento Box */}
-          <div className="lg:col-span-7 bg-slate-900 text-white rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-xl flex flex-col justify-between min-h-[380px]">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="relative z-10">
-              <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold text-indigo-300 uppercase tracking-widest mb-4 border border-white/10">
-                Heritage & Science
-              </span>
-              <h2 className="text-3xl md:text-5xl font-serif mb-4 leading-tight">
-                Blend heritage,<br />Create beauty.
-              </h2>
-              <p className="text-sm md:text-base text-slate-300 max-w-lg leading-relaxed">
-                자연 성분에 현대 피부 공학 과학을 더해 피부 본연의 투명한 기품과 건강함을 되찾아 드립니다.
-              </p>
-            </div>
-            <div className="relative z-10 pt-8">
-              <Link
-                to="/company"
-                className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl text-xs font-bold hover:bg-slate-100 transition-colors uppercase tracking-widest shadow-md"
-              >
-                <span>Read Brand Story</span>
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Secondary Bento Specs Box */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            <div className="flex-1 bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-3xl p-8 border border-amber-200/60 shadow-sm flex flex-col justify-between relative overflow-hidden">
-              <div>
-                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-widest">Global Craftsmanship</span>
-                <h3 className="text-2xl font-serif text-slate-900 mt-2 mb-3">ONEDAYS BEAUTY</h3>
-                <p className="text-xs text-slate-600 leading-relaxed italic">
-                  "Quiet elegance, profound dermatological efficacy."
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-amber-200/40 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-800">100% Vegan & Clean Beauty</span>
-                <span className="text-xs font-mono font-bold text-amber-800">Global 60+ Countries</span>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Customer Rating</p>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-2xl font-serif font-bold text-slate-900">4.9 / 5.0</span>
-                  <div className="flex text-amber-400 text-sm">★★★★★</div>
-                </div>
-              </div>
-              <span className="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
-                Verified Global Reviews
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Product Detail Modal Viewer */}
+      {/* 6. Product Detail Modal Viewer */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-slate-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="bg-[#141414] rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-[#D6A56D]/30">
             <div className="grid grid-cols-1 md:grid-cols-2">
               {/* Product Image */}
-              <div className="aspect-square bg-slate-50 relative overflow-hidden flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100">
+              <div className="aspect-square bg-[#0B0B0B] relative overflow-hidden flex items-center justify-center border-b md:border-b-0 md:border-r border-white/10">
                 {selectedProduct.isBestseller && (
-                  <span className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs z-10">
+                  <span className="absolute top-4 left-4 bg-[#D6A56D] text-[#050505] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest z-10">
                     BEST SELLER
                   </span>
                 )}
@@ -347,36 +419,36 @@ export function LandingPage() {
               </div>
 
               {/* Product Info & Actions */}
-              <div className="p-8 flex flex-col justify-between">
+              <div className="p-8 flex flex-col justify-between space-y-6">
                 <div>
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-xs font-bold text-amber-800 uppercase tracking-widest">{selectedProduct.brand}</span>
-                    <button onClick={() => setSelectedProduct(null)} className="text-slate-400 hover:text-slate-700">
+                    <span className="text-xs font-bold text-[#D6A56D] uppercase tracking-widest">{selectedProduct.brand}</span>
+                    <button onClick={() => setSelectedProduct(null)} className="text-slate-400 hover:text-white">
                       <span className="material-symbols-outlined">close</span>
                     </button>
                   </div>
 
-                  <h2 className="text-xl font-bold text-slate-900 mb-2 leading-snug">{selectedProduct.name}</h2>
-                  <p className="text-xs font-mono text-slate-400 mb-4">코드: {selectedProduct.code} | 카테고리: {selectedProduct.category}</p>
+                  <h2 className="text-2xl font-serif font-bold text-white mb-2 leading-snug">{selectedProduct.name}</h2>
+                  <p className="text-xs font-mono text-slate-500 mb-4">Code: {selectedProduct.code} | Category: {selectedProduct.category}</p>
 
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6">
+                  <div className="bg-[#0B0B0B] p-4 rounded-2xl border border-white/10 mb-6">
                     <div className="flex items-baseline gap-3">
                       {selectedProduct.salePrice ? (
                         <>
-                          <span className="text-2xl font-bold text-rose-600">{selectedProduct.salePrice.toLocaleString()}원</span>
-                          <span className="text-sm text-slate-400 line-through">{selectedProduct.price.toLocaleString()}원</span>
+                          <span className="text-2xl font-serif font-bold text-[#D81B60]">₩{selectedProduct.salePrice.toLocaleString()}</span>
+                          <span className="text-sm text-slate-500 line-through">₩{selectedProduct.price.toLocaleString()}</span>
                         </>
                       ) : (
-                        <span className="text-2xl font-bold text-slate-900">{selectedProduct.price.toLocaleString()}원</span>
+                        <span className="text-2xl font-serif font-bold text-white">₩{selectedProduct.price.toLocaleString()}</span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500 mt-1">남은 재고: {selectedProduct.stock}개 ({selectedProduct.status})</p>
+                    <p className="text-xs text-slate-400 mt-1">Stock Availability: {selectedProduct.stock} units ({selectedProduct.status})</p>
                   </div>
 
                   <div className="space-y-2 mb-6">
-                    <h4 className="text-xs font-bold text-slate-700 uppercase">제품 설명</h4>
-                    <p className="text-xs text-slate-600 leading-relaxed bg-white border border-slate-100 p-3 rounded-xl">
-                      {selectedProduct.description || '조선시대 한방 미용법과 현대 기술의 만남으로 완성된 피부 친화적 뷰티 케어 라인입니다.'}
+                    <h4 className="text-xs font-bold text-[#D6A56D] uppercase tracking-widest">Product Description</h4>
+                    <p className="text-xs text-slate-300 leading-relaxed bg-[#1E1E1E] border border-white/5 p-4 rounded-xl">
+                      {selectedProduct.description || '최상급 자연 한방 원료와 현대 더마 스킨케어 기술의 조화로 완성된 럭셔리 뷰티 에디션입니다.'}
                     </p>
                   </div>
                 </div>
@@ -384,19 +456,18 @@ export function LandingPage() {
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
-                    className="flex-1 py-3.5 border-2 border-slate-900 text-slate-900 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 py-3.5 border border-[#D81B60] text-[#D81B60] hover:bg-[#D81B60] hover:text-white font-bold rounded-xl text-xs uppercase tracking-widest transition-all"
                   >
-                    <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
-                    장바구니 담기
+                    Add to Bag
                   </button>
                   <button
                     onClick={() => {
                       alert('주문 결제 페이지로 이동합니다.');
                       setSelectedProduct(null);
                     }}
-                    className="flex-1 py-3.5 bg-slate-900 text-white font-bold rounded-xl text-sm hover:bg-slate-800 transition-colors shadow-md flex items-center justify-center gap-2"
+                    className="flex-1 py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white font-bold rounded-xl text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(216,27,96,0.4)]"
                   >
-                    바로 구매하기
+                    Purchase Now
                   </button>
                 </div>
               </div>

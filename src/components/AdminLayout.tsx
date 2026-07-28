@@ -1,8 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { StaffPermissions } from './UserManagement';
-
-import { useLocation } from 'react-router-dom';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -47,7 +45,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       }
     }
 
-    // STRICT URL GUARD: Only superadmin (siteadmin) can access /admin/system (권한등록)
     if (location.pathname === '/admin/system' && savedRole !== 'superadmin') {
       alert('권한등록 메뉴는 siteadmin(최고관리자) 전용 메뉴입니다.');
       navigate('/admin/dashboard', { replace: true });
@@ -74,8 +71,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { name: '권한등록', path: '/admin/system', icon: 'manage_accounts', permKey: 'system' },
   ];
 
-  // Filter sidebar menus based on assigned permissions
-  // ONLY siteadmin (superadmin) can see '권한등록' (/admin/system)
   const visibleMenuItems = allMenuItems.filter((item) => {
     if (item.permKey === 'system') {
       return userRole === 'superadmin';
@@ -86,97 +81,111 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   });
 
   return (
-    <div className="flex h-screen bg-background text-on-surface overflow-hidden antialiased">
-      {/* Sidebar */}
-      <aside className="w-64 bg-primary text-on-primary flex flex-col h-full shrink-0 z-50">
-        <div className="p-6 flex flex-col gap-1 mb-4 border-b border-primary/20">
+    <div className="flex h-screen bg-[#0B0B0B] text-[#FAFAFA] overflow-hidden antialiased font-sans">
+      {/* Sleek Dark Sidebar */}
+      <aside className="w-64 bg-[#111111] border-r border-[#D6A56D]/20 text-white flex flex-col h-full shrink-0 z-50">
+        <div className="p-6 flex flex-col gap-1 mb-2 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-secondary flex items-center justify-center font-bold text-white">
-              C
+            <div className="w-9 h-9 rounded-xl bg-[#D81B60] flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(216,27,96,0.5)]">
+              O
             </div>
-            <h1 className="text-xl font-bold">Console CMS</h1>
+            <div>
+              <h1 className="text-lg font-serif font-bold tracking-wider uppercase text-white">ONEDAYS</h1>
+              <p className="text-[10px] text-[#D6A56D] tracking-widest font-mono">FLAGSHIP CONSOLE</p>
+            </div>
           </div>
-          <p className="text-xs text-on-primary/70">Back-office Management System</p>
         </div>
-        
-        <nav className="flex-1 overflow-y-auto px-4 pb-8 space-y-1">
+
+        {/* Menu Items List */}
+        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+          <div className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            Main Management
+          </div>
           {visibleMenuItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-3 py-2.5 px-3 rounded-lg cursor-pointer duration-150 text-sm ${
+                `flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all relative ${
                   isActive
-                    ? 'bg-secondary text-on-secondary font-semibold shadow-xs'
-                    : 'text-on-primary/80 hover:bg-white/10 hover:text-white'
+                    ? 'bg-[#D81B60]/15 text-[#D81B60] border border-[#D81B60]/40 shadow-[0_0_15px_rgba(216,27,96,0.2)] font-bold'
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`
               }
             >
-              <span 
-                className="material-symbols-outlined text-[20px]"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                {item.icon}
-              </span>
-              {item.name}
+              {({ isActive }) => (
+                <>
+                  <span
+                    className={`material-symbols-outlined text-[20px] ${
+                      isActive ? 'text-[#D81B60]' : 'text-slate-400'
+                    }`}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="flex-1">{item.name}</span>
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D81B60] shadow-[0_0_8px_#D81B60]" />
+                  )}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        {/* Current User Session Footer */}
-        <div className="p-4 border-t border-primary/20 bg-black/10 flex items-center justify-between">
-          <div className="truncate">
-            <p className="text-xs font-bold text-white truncate">{userName}</p>
-            <p className="text-[11px] text-on-primary/60">{userRole === 'superadmin' ? 'Site Admin (최고관리자)' : 'Staff Account'}</p>
+        {/* Sidebar Footer User Card */}
+        <div className="p-4 m-4 bg-[#141414] rounded-2xl border border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-[#D6A56D] text-[#050505] font-bold text-xs flex items-center justify-center shrink-0">
+              {userName.substring(0, 1)}
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-xs font-bold text-white truncate">{userName}</p>
+              <p className="text-[10px] text-slate-400 font-mono truncate">{userRole}</p>
+            </div>
           </div>
-          <button 
+          <button
             onClick={handleLogout}
-            className="p-1.5 hover:bg-white/20 rounded-lg text-on-primary/80 hover:text-white transition-colors"
-            title="로그아웃"
+            className="text-slate-400 hover:text-[#D81B60] p-1.5 transition-colors"
+            title="Logout"
           >
             <span className="material-symbols-outlined text-[18px]">logout</span>
           </button>
         </div>
       </aside>
 
-      {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* TopNavBar */}
-        <header className="bg-surface text-primary w-full h-16 sticky top-0 z-40 border-b border-outline-variant shadow-xs flex justify-between items-center px-8 shrink-0">
-          <div className="flex items-center gap-4">
-            <span className="text-lg font-bold">Admin Portal</span>
-            {userRole === 'superadmin' && (
-              <span className="px-2.5 py-0.5 text-xs font-bold bg-purple-100 text-purple-700 rounded-full">
-                Site Admin
-              </span>
-            )}
+      {/* Main Right Content Layout */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#050505]">
+        {/* Top Command Header */}
+        <header className="h-16 bg-[#111111]/80 backdrop-blur-md border-b border-[#D6A56D]/20 px-8 flex items-center justify-between z-40">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-[20px] text-[#D6A56D]">space_dashboard</span>
+            <h2 className="text-sm font-serif font-bold text-white tracking-wide uppercase">
+              Management Portal
+            </h2>
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center text-sm font-bold">
-                {userName.charAt(0)}
-              </div>
-              <div className="text-xs text-left hidden sm:block">
-                <p className="font-bold text-slate-900">{userName}</p>
-                <p className="text-[11px] text-slate-400">{userRole}</p>
-              </div>
-            </div>
-            <button 
-              onClick={handleLogout}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors flex items-center gap-1"
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 text-xs text-slate-300 rounded-lg border border-white/10 transition-colors"
             >
-              <span className="material-symbols-outlined text-[16px]">logout</span>
+              <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+              <span>퍼블릭 스토어 가기</span>
+            </a>
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1.5 bg-[#D81B60]/20 hover:bg-[#D81B60] text-[#D81B60] hover:text-white border border-[#D81B60]/40 text-xs font-bold rounded-lg transition-all"
+            >
               로그아웃
             </button>
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-background">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+        {/* Content Canvas */}
+        <main className="flex-1 overflow-y-auto p-8">
+          {children}
         </main>
       </div>
     </div>

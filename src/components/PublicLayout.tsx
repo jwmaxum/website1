@@ -15,6 +15,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [currentLang, setCurrentLang] = useState<LanguageCode>('ko');
   const [legalModalType, setLegalModalType] = useState<'terms' | 'privacy' | 'businessInfo' | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Dynamic Brand & Favicon States
   const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
@@ -22,6 +23,18 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [faviconUrl, setFaviconUrl] = useState('');
 
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const savedBrandKo = localStorage.getItem('site_brand_name_ko');
@@ -58,7 +71,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     localStorage.setItem('selected_language', code);
     setLangDropdownOpen(false);
 
-    // Apply RTL for Arabic
     if (code === 'ar') {
       document.documentElement.dir = 'rtl';
     } else {
@@ -74,86 +86,97 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const currentLangObj = supportedLanguages.find((l) => l.code === currentLang) || supportedLanguages[0];
 
   return (
-    <div className="text-slate-900 font-sans antialiased min-h-screen flex flex-col bg-[#fbf9f6]">
-      {/* TopAppBar */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs transition-all duration-300">
-        <div className="flex justify-between items-center px-4 md:px-10 py-3.5 w-full max-w-[1440px] mx-auto">
-          
+    <div className="text-[#FAFAFA] font-sans antialiased min-h-screen flex flex-col bg-[#050505]">
+      {/* Floating Transparent -> Black Glass Blur Header */}
+      <header
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+          isScrolled
+            ? 'bg-[#050505]/90 backdrop-blur-md border-b border-[#D6A56D]/20 shadow-2xl py-3'
+            : 'bg-gradient-to-b from-[#050505]/80 via-[#050505]/40 to-transparent py-5'
+        }`}
+      >
+        <div className="flex justify-between items-center px-6 md:px-12 w-full max-w-[1536px] mx-auto">
           {/* Mobile Hamburger Button */}
           <div className="flex md:hidden items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-white hover:text-[#D81B60] transition-colors"
               aria-label="Toggle Mobile Menu"
             >
-              <span className="material-symbols-outlined text-[24px]">
+              <span className="material-symbols-outlined text-[26px]">
                 {mobileMenuOpen ? 'close' : 'menu'}
               </span>
             </button>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6 items-center">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex gap-8 items-center text-xs font-semibold uppercase tracking-widest">
             <Link
               to="/company"
-              className={`text-sm font-medium transition-colors duration-300 ${
-                location.pathname === '/company'
-                  ? 'text-slate-900 font-bold border-b-2 border-slate-900 pb-0.5'
-                  : 'text-slate-600 hover:text-slate-900'
+              className={`relative py-1 transition-colors duration-300 hover:text-[#D81B60] ${
+                location.pathname === '/company' ? 'text-[#D81B60] font-bold' : 'text-slate-300'
               }`}
             >
               {t('company')}
+              {location.pathname === '/company' && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#D81B60] rounded-full" />
+              )}
             </Link>
             <Link
               to="/brand"
-              className={`text-sm font-medium transition-colors duration-300 ${
-                location.pathname === '/brand'
-                  ? 'text-slate-900 font-bold border-b-2 border-slate-900 pb-0.5'
-                  : 'text-slate-600 hover:text-slate-900'
+              className={`relative py-1 transition-colors duration-300 hover:text-[#D81B60] ${
+                location.pathname === '/brand' ? 'text-[#D81B60] font-bold' : 'text-slate-300'
               }`}
             >
               {t('brand')}
+              {location.pathname === '/brand' && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#D81B60] rounded-full" />
+              )}
             </Link>
             <Link
               to="/media"
-              className={`text-sm font-medium transition-colors duration-300 ${
-                location.pathname === '/media'
-                  ? 'text-slate-900 font-bold border-b-2 border-slate-900 pb-0.5'
-                  : 'text-slate-600 hover:text-slate-900'
+              className={`relative py-1 transition-colors duration-300 hover:text-[#D81B60] ${
+                location.pathname === '/media' ? 'text-[#D81B60] font-bold' : 'text-slate-300'
               }`}
             >
               {t('media')}
+              {location.pathname === '/media' && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#D81B60] rounded-full" />
+              )}
             </Link>
             {showShoppingMall && (
               <Link
                 to="/"
-                className={`text-sm font-medium transition-colors duration-300 ${
-                  isShopPage
-                    ? 'text-slate-900 font-bold border-b-2 border-slate-900 pb-0.5'
-                    : 'text-slate-600 hover:text-slate-900'
+                className={`relative py-1 transition-colors duration-300 hover:text-[#D81B60] ${
+                  isShopPage ? 'text-[#D81B60] font-bold' : 'text-slate-300'
                 }`}
               >
                 {t('shop')}
+                {isShopPage && (
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#D81B60] rounded-full" />
+                )}
               </Link>
             )}
           </nav>
 
           {/* Logo Center */}
           <div className="flex-1 flex justify-center items-center">
-            <Link to="/" className="text-xl md:text-2xl font-serif tracking-widest text-slate-900 hover:opacity-80 transition-opacity flex items-center gap-2">
-              {faviconUrl && <img src={faviconUrl} alt="Logo Icon" className="w-7 h-7 object-contain" />}
+            <Link
+              to="/"
+              className="text-xl md:text-3xl font-serif tracking-[0.25em] text-white hover:text-[#D6A56D] transition-colors uppercase flex items-center gap-3"
+            >
+              {faviconUrl && <img src={faviconUrl} alt="Logo Icon" className="w-8 h-8 object-contain" />}
               <span>{brandNameEn || 'ONEDAYS BEAUTY'}</span>
             </Link>
           </div>
 
-          {/* Header Right Tools: Language Selector + User MyPage */}
-          <div className="flex gap-2.5 md:gap-4 items-center text-slate-900">
-            
+          {/* Header Right Tools: Language Selector + Cart + Console */}
+          <div className="flex gap-4 items-center text-white">
             {/* Language Selector Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-slate-200 hover:bg-slate-100 transition-colors text-xs font-bold text-slate-800"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-[#D6A56D]/50 transition-colors text-xs font-semibold text-slate-200"
               >
                 <span>{currentLangObj.flag}</span>
                 <span className="hidden sm:inline">{currentLangObj.label}</span>
@@ -161,16 +184,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in duration-200">
-                  <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                    Language (언어 선택)
+                <div className="absolute right-0 mt-2 w-48 bg-[#141414] rounded-2xl shadow-2xl border border-[#D6A56D]/30 py-2 z-50 animate-in fade-in duration-200">
+                  <div className="px-3 py-1.5 text-[10px] font-bold text-[#D6A56D] uppercase tracking-wider border-b border-white/10">
+                    Language
                   </div>
                   {supportedLanguages.map((lang) => (
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageChange(lang.code)}
-                      className={`w-full px-4 py-2 text-xs text-left flex items-center justify-between hover:bg-slate-50 transition-colors ${
-                        currentLang === lang.code ? 'font-bold text-slate-900 bg-slate-50' : 'text-slate-600'
+                      className={`w-full px-4 py-2 text-xs text-left flex items-center justify-between hover:bg-white/5 transition-colors ${
+                        currentLang === lang.code ? 'font-bold text-[#D81B60] bg-white/5' : 'text-slate-300'
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -178,7 +201,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                         <span>{lang.label}</span>
                       </span>
                       {currentLang === lang.code && (
-                        <span className="material-symbols-outlined text-[16px] text-slate-900">check</span>
+                        <span className="material-symbols-outlined text-[14px] text-[#D81B60]">check</span>
                       )}
                     </button>
                   ))}
@@ -186,206 +209,158 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               )}
             </div>
 
-            {/* MyPage Icon */}
-            <Link
-              to="/mypage"
-              className="p-1.5 hover:text-slate-500 transition-colors duration-300 flex items-center justify-center"
-              title={t('mypage')}
-            >
-              <span className="material-symbols-outlined text-[22px]">person</span>
-            </Link>
-
+            {/* Cart Modal Trigger Button */}
             {showShoppingMall && (
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="p-1.5 hover:text-slate-500 transition-colors duration-300 flex items-center justify-center"
-                title={t('cart')}
+                className="p-2 text-slate-200 hover:text-[#D81B60] transition-colors relative"
+                title="Shopping Bag"
               >
                 <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
               </button>
             )}
+
+            {/* Console / Admin Link */}
+            <Link
+              to="/admin/dashboard"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold rounded-full transition-all shadow-lg hover:shadow-[0_0_15px_rgba(216,27,96,0.5)]"
+            >
+              <span className="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+              <span>{t('console')}</span>
+            </Link>
           </div>
         </div>
 
-        {/* Desktop Header Shop Sub-Menu */}
-        {showShoppingMall && isShopPage && (
-          <div className="hidden md:block bg-slate-50/90 border-t border-slate-200 px-5 md:px-10 py-2.5">
-            <div className="max-w-[1440px] mx-auto flex items-center justify-center gap-8 overflow-x-auto text-xs md:text-sm font-medium">
-              <a href="#product-catalog" className="flex items-center gap-1.5 text-slate-700 hover:text-slate-900 transition-colors whitespace-nowrap">
-                <span className="material-symbols-outlined text-[18px]">category</span>
-                <span>{t('categories')}</span>
-              </a>
-              <Link to="/?filter=bestsellers" className="flex items-center gap-1.5 text-slate-900 font-bold transition-colors whitespace-nowrap">
-                <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                <span>{t('bestsellers')}</span>
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-[#0B0B0B] border-b border-[#D6A56D]/30 px-6 py-6 space-y-4 animate-in slide-in-from-top duration-300">
+            <Link
+              to="/company"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold tracking-wider text-slate-200 hover:text-[#D81B60]"
+            >
+              {t('company')}
+            </Link>
+            <Link
+              to="/brand"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold tracking-wider text-slate-200 hover:text-[#D81B60]"
+            >
+              {t('brand')}
+            </Link>
+            <Link
+              to="/media"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold tracking-wider text-slate-200 hover:text-[#D81B60]"
+            >
+              {t('media')}
+            </Link>
+            {showShoppingMall && (
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-sm font-semibold tracking-wider text-slate-200 hover:text-[#D81B60]"
+              >
+                {t('shop')}
               </Link>
-              <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-1.5 text-slate-700 hover:text-slate-900 transition-colors whitespace-nowrap">
-                <span className="material-symbols-outlined text-[18px]">shopping_cart</span>
-                <span>{t('cart')}</span>
-              </button>
-              <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-1.5 text-slate-700 hover:text-slate-900 transition-colors whitespace-nowrap">
-                <span className="material-symbols-outlined text-[18px]">receipt_long</span>
-                <span>{t('orders')}</span>
-              </button>
-              <Link to="/mypage" className="flex items-center gap-1.5 text-slate-700 hover:text-slate-900 transition-colors whitespace-nowrap">
-                <span className="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>{t('mypage')}</span>
-              </Link>
-            </div>
+            )}
+            <Link
+              to="/admin/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-bold text-[#D81B60]"
+            >
+              {t('console')}
+            </Link>
           </div>
         )}
       </header>
 
-      {/* Mobile Navigation Drawer Overlay */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200">
-          <div className="fixed top-[60px] left-0 right-0 bg-white border-b border-slate-200 p-6 space-y-6 shadow-2xl max-h-[85vh] overflow-y-auto">
-            {/* Main Nav Links */}
-            <div className="space-y-3 pb-4 border-b border-slate-100">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Main Navigation</p>
-              <div className="grid grid-cols-2 gap-3 text-sm font-bold">
-                <Link
-                  to="/company"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 bg-slate-50 rounded-xl text-slate-900 flex items-center justify-between"
-                >
-                  <span>{t('company')}</span>
-                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                </Link>
-                <Link
-                  to="/brand"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 bg-slate-50 rounded-xl text-slate-900 flex items-center justify-between"
-                >
-                  <span>{t('brand')}</span>
-                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                </Link>
-                <Link
-                  to="/media"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 bg-slate-50 rounded-xl text-slate-900 flex items-center justify-between"
-                >
-                  <span>{t('media')}</span>
-                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                </Link>
-                {showShoppingMall && (
-                  <Link
-                    to="/"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-3 bg-slate-50 rounded-xl text-slate-900 flex items-center justify-between"
-                  >
-                    <span>{t('shop')}</span>
-                    <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                  </Link>
-                )}
-              </div>
-            </div>
+      {/* Main Content Area */}
+      <main className="flex-1 w-full min-h-screen">
+        {children}
+      </main>
 
-            {/* Shop Sub-Menu Links */}
-            {showShoppingMall && (
-              <div className="space-y-2 pb-4 border-b border-slate-100">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Shop Shortcuts</p>
-                <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
-                  <a
-                    href="#product-catalog"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 border border-slate-200 rounded-lg text-slate-700 flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">category</span>
-                    <span>{t('categories')}</span>
-                  </a>
-                  <Link
-                    to="/?filter=bestsellers"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 border border-amber-300 bg-amber-50 rounded-lg text-amber-900 flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">star</span>
-                    <span>{t('bestsellers')}</span>
-                  </Link>
-                  <Link
-                    to="/mypage"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 border border-slate-200 rounded-lg text-slate-700 flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">account_circle</span>
-                    <span>{t('mypage')}</span>
-                  </Link>
-                </div>
-              </div>
-            )}
+      {/* Cart Modal Container */}
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-            {/* Mobile Multi-Language Grid Selector */}
-            <div className="space-y-3">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Language (다국어 선택 - 7개 국어)
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {supportedLanguages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      handleLanguageChange(lang.code);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all ${
-                      currentLang === lang.code
-                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-                        : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span>{lang.flag}</span>
-                      <span>{lang.label}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
+      {/* Legal Terms Modal Container */}
+      {legalModalType && (
+        <LegalTermsModal type={legalModalType} onClose={() => setLegalModalType(null)} />
+      )}
+
+      {/* Pure Black Luxury Footer */}
+      <footer className="w-full bg-[#050505] border-t border-[#D6A56D]/20 pt-20 pb-12 px-6 md:px-12">
+        <div className="max-w-[1536px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          {/* Col 1: Brand Info */}
+          <div className="space-y-4">
+            <h4 className="text-2xl font-serif uppercase tracking-[0.2em] text-[#D6A56D]">
+              {brandNameEn || 'ONEDAYS BEAUTY'}
+            </h4>
+            <p className="text-xs font-bold text-[#B7B7B7]">{brandNameKo || '원데이즈뷰티'}</p>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+              고급스러운 감성과 현대 피부 과학의 조화로 탄생한 하이 패션 플래그십 클린 뷰티 브랜드.
+            </p>
+          </div>
+
+          {/* Col 2: Navigation Links */}
+          <div className="space-y-3">
+            <h5 className="text-xs font-bold uppercase tracking-widest text-[#D6A56D]">Navigation</h5>
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li><Link to="/company" className="hover:text-[#D81B60] transition-colors">{t('company')}</Link></li>
+              <li><Link to="/brand" className="hover:text-[#D81B60] transition-colors">{t('brand')}</Link></li>
+              <li><Link to="/media" className="hover:text-[#D81B60] transition-colors">{t('media')}</Link></li>
+              <li><Link to="/" className="hover:text-[#D81B60] transition-colors">{t('shop')}</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 3: Legal & Support */}
+          <div className="space-y-3">
+            <h5 className="text-xs font-bold uppercase tracking-widest text-[#D6A56D]">Customer & Legal</h5>
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li>
+                <button onClick={() => setLegalModalType('terms')} className="hover:text-[#D81B60] transition-colors text-left">
+                  {t('terms')}
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setLegalModalType('privacy')} className="hover:text-[#D81B60] transition-colors text-left font-bold text-white">
+                  {t('privacy')}
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setLegalModalType('businessInfo')} className="hover:text-[#D81B60] transition-colors text-left">
+                  {t('businessInfo')}
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Newsletter */}
+          <div className="space-y-4">
+            <h5 className="text-xs font-bold uppercase tracking-widest text-[#D6A56D]">Newsletter</h5>
+            <p className="text-xs text-slate-400">럭셔리 컬렉션 신규 출시 및 프라이빗 이벤트를 구독하세요.</p>
+            <div className="flex">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="bg-[#141414] border border-[#D6A56D]/30 px-3.5 py-2 text-xs text-white rounded-l-lg focus:outline-none focus:border-[#D81B60] flex-1"
+              />
+              <button className="bg-[#D81B60] hover:bg-[#A80F48] text-white px-4 py-2 text-xs font-bold rounded-r-lg transition-colors">
+                JOIN
+              </button>
             </div>
           </div>
         </div>
-      )}
 
-      {/* Main Content Wrapper */}
-      <div className={`flex flex-1 ${isShopPage && showShoppingMall ? 'pt-[115px] md:pt-[125px]' : 'pt-[65px] md:pt-[73px]'}`}>
-        <main className="flex-1 w-full max-w-[1440px] mx-auto px-4 md:px-10 pb-16">
-          {children}
-        </main>
-      </div>
-
-      {/* Footer */}
-      <footer className="w-full py-16 px-6 md:px-10 grid grid-cols-4 gap-8 max-w-[1440px] mx-auto bg-white border-t border-slate-200">
-        <div className="col-span-4 lg:col-span-1 mb-6 lg:mb-0">
-          <h4 className="text-2xl font-serif uppercase tracking-tighter text-slate-900 mb-1">{brandNameEn || 'ONEDAYS BEAUTY'}</h4>
-          <p className="text-xs font-bold text-slate-500 mb-4">{brandNameKo || '원데이즈뷰티'}</p>
-          <p className="text-xs text-slate-400 mb-4">Copyright © {brandNameEn || 'ONEDAYS BEAUTY'} {t('rights')}</p>
-        </div>
-        <div className="col-span-2 lg:col-span-1 flex flex-col gap-3">
-          <button onClick={() => setLegalModalType('terms')} className="text-sm text-slate-900 font-bold underline hover:text-slate-600 transition-colors text-left">
-            {t('terms')}
-          </button>
-          <button onClick={() => setLegalModalType('privacy')} className="text-sm text-slate-900 font-bold underline hover:text-slate-600 transition-colors text-left">
-            {t('privacy')}
-          </button>
-          <button onClick={() => setLegalModalType('businessInfo')} className="text-sm text-slate-500 hover:text-slate-900 transition-colors text-left">
-            {t('businessInfo')}
-          </button>
-        </div>
-        <div className="col-span-2 lg:col-span-1 flex flex-col gap-3">
-          <Link to="/support?tab=inquiry" className="text-sm text-slate-500 hover:text-slate-900 transition-colors duration-200">{t('customerService')}</Link>
-          <Link to="/support?tab=faq" className="text-sm text-slate-500 hover:text-slate-900 transition-colors duration-200">{t('faq')}</Link>
-          <Link to="/admin/login" className="text-sm text-slate-400 hover:text-slate-700 transition-colors duration-200">{t('console')}</Link>
-        </div>
-        <div className="col-span-4 lg:col-span-1 flex gap-4 mt-4 lg:mt-0">
-          <Link to="#" className="text-slate-500 hover:text-slate-900 transition-colors"><span className="material-symbols-outlined">public</span></Link>
-          <Link to="#" className="text-slate-500 hover:text-slate-900 transition-colors"><span className="material-symbols-outlined">mail</span></Link>
+        <div className="max-w-[1536px] mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
+          <p>Copyright © {brandNameEn || 'ONEDAYS BEAUTY'} {t('rights')}</p>
+          <div className="flex gap-6">
+            <span className="hover:text-white cursor-pointer">Instagram</span>
+            <span className="hover:text-white cursor-pointer">YouTube</span>
+            <span className="hover:text-white cursor-pointer">Vogue Media</span>
+          </div>
         </div>
       </footer>
-
-      {/* Legal Policy Modal */}
-      <LegalTermsModal type={legalModalType} onClose={() => setLegalModalType(null)} />
-
-      {/* Cart & Checkout Modal */}
-      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   );
 }
