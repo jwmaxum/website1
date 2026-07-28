@@ -42,7 +42,6 @@ export function LoginPage() {
   const [isSubmittingModal, setIsSubmittingModal] = useState(false);
 
   const validatePasswordStrength = (pwd: string) => {
-    // 6자리 이상, 영문, 숫자, 특수문자 조합
     const hasMinLength = pwd.length >= 6;
     const hasLetter = /[A-Za-z]/.test(pwd);
     const hasNumber = /\d/.test(pwd);
@@ -60,7 +59,6 @@ export function LoginPage() {
       return;
     }
 
-    // Load staff accounts from localStorage
     let staffList: StaffUser[] = initialStaffUsers;
     const savedStaff = localStorage.getItem('admin_staff_users');
     if (savedStaff) {
@@ -81,15 +79,12 @@ export function LoginPage() {
     const storedHash = localStorage.getItem(`admin_password_hash_${foundUser.id}`) || foundUser.passwordHash;
 
     if (!isPasswordChanged) {
-      // 최초 또는 임시 비밀번호 상태
       if (password === '!admin1004' || password === 'admin1004') {
-        // 임시 비밀번호 로그인 성공 -> 강제 비밀번호 변경 모달 팝업
         setShowResetModal(true);
       } else {
         setErrorMessage('아이디 또는 비밀번호가 올바르지 않습니다.');
       }
     } else {
-      // 비밀번호가 변경된 정식 상태 -> SHA-256 해시 검증
       const inputHash = await hashPassword(password);
       if (storedHash && inputHash === storedHash) {
         localStorage.setItem('admin_logged_in', 'true');
@@ -123,11 +118,9 @@ export function LoginPage() {
       const trimmedId = userId.trim() || 'siteadmin';
       const hashedPassword = await hashPassword(newPassword);
 
-      // LocalStorage에 사용자별 해시값 및 변경 플래그 저장
       localStorage.setItem(`admin_password_hash_${trimmedId}`, hashedPassword);
       localStorage.setItem(`isPasswordChanged_${trimmedId}`, 'true');
 
-      // Also update in admin_staff_users list if present
       const savedStaff = localStorage.getItem('admin_staff_users');
       let staffList: StaffUser[] = savedStaff ? JSON.parse(savedStaff) : initialStaffUsers;
       const foundUser = staffList.find((u) => u.id === trimmedId);
@@ -152,44 +145,43 @@ export function LoginPage() {
   };
 
   return (
-    <main className="w-full min-h-screen relative flex items-center justify-center overflow-hidden bg-background">
-      {/* Decorative Background Layer */}
-      <div className="absolute inset-0 ambient-grid z-0"></div>
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-multiply z-0" 
-        style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDgwj4YPsfqs9iMwiN5qSnRxdbtAIPlqpA4bFv-SLLUJOSW_Nrp_cBMPYwrY3HanwDRBGe4BxpoIXDUUuvdMK5UVCQchhDiT9mK6qhV6LNdrJiM4evYIi2VfXcX67xltoys17CV7265GsjRVIvVcFIpgE4QLfjfrS6FM30IEAkL1-hN94_YZonEIdmJ8VkO66kYuc8brBSfX1NN7hEhDzvR9RfPtTtP_6176yDMX8wvQNDiSuLk4Z2dzg')" }}
-      ></div>
+    <main className="w-full min-h-screen relative flex items-center justify-center overflow-hidden bg-[#050505] text-[#FAFAFA]">
+      {/* Background Ambient Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#D81B60]/15 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-[#D6A56D]/10 rounded-full blur-[90px] pointer-events-none" />
 
       {/* Login Card Canvas */}
       <div className="w-full max-w-md mx-4 md:mx-auto relative z-10">
-        <div className="bg-white rounded-2xl shadow-sm border border-outline-variant overflow-hidden flex flex-col">
+        <div className="bg-[#141414] rounded-3xl shadow-2xl border border-[#D6A56D]/30 overflow-hidden flex flex-col">
           
           {/* Card Header / Brand */}
-          <div className="p-6 pb-4 flex flex-col items-center justify-center border-b border-surface-container border-opacity-50 text-center">
-            <div className="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center mb-3 shadow-sm ring-1 ring-outline-variant/30 overflow-hidden p-1">
+          <div className="p-8 pb-6 flex flex-col items-center justify-center border-b border-white/10 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-[#0B0B0B] flex items-center justify-center mb-4 shadow-inner border border-white/10 overflow-hidden p-2">
               <img 
                 className="w-full h-full object-contain" 
                 alt={brandNameKo} 
                 src={faviconUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuCzdKFsdPnKcTZgizNUKNAQm4C7c0rxBrNMlB3K5hpuP-ZtI39somkJYvZ44418CAGbL_oNOOYdt8XvN0xntUda3uvRiJ7ClsESuUvSTvxQunbLKo_chpYgvscwiltagl-nk3eNRXa02lkJl6B4_pZWgWYXcljNDFz49O07dhycfXCfTqEtc38vlmTd0bJKETS9M_mviIM6bAh3DgLQkcfOqeoWpGwIjzFuMVamK28DEASUmEFHTskKTA"} 
               />
             </div>
-            <h1 className="text-xl font-serif font-bold tracking-wider text-slate-900 uppercase">
+            <h1 className="text-2xl font-serif font-bold tracking-[0.2em] text-[#D6A56D] uppercase">
               {brandNameEn}
             </h1>
-            <p className="text-xs font-bold text-slate-500 mt-0.5">{brandNameKo} 통합 관리자 콘솔 (Console CMS)</p>
+            <p className="text-xs font-bold text-slate-300 mt-1">{brandNameKo} 통합 관리자 콘솔 (Console CMS)</p>
           </div>
 
           {/* Form Body */}
-          <form className="p-6 flex flex-col gap-5" onSubmit={handleLoginSubmit}>
+          <form className="p-8 flex flex-col gap-6" onSubmit={handleLoginSubmit}>
             {errorMessage && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 font-medium">
+              <div className="p-3 bg-[#A80F48]/20 border border-[#D81B60] rounded-xl text-xs text-[#D81B60] font-bold">
                 {errorMessage}
               </div>
             )}
 
             {/* ID Field */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="userId" className="text-sm font-semibold text-on-surface">ID</label>
+              <label htmlFor="userId" className="text-xs font-bold text-[#D6A56D] uppercase tracking-widest">
+                ID (관리자 아이디)
+              </label>
               <Input 
                 id="userId"
                 name="userId"
@@ -203,7 +195,9 @@ export function LoginPage() {
 
             {/* Password Field */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="password" className="text-sm font-semibold text-on-surface">Password</label>
+              <label htmlFor="password" className="text-xs font-bold text-[#D6A56D] uppercase tracking-widest">
+                Password (비밀번호)
+              </label>
               <Input 
                 id="password"
                 name="password"
@@ -216,21 +210,12 @@ export function LoginPage() {
             </div>
 
             {/* Actions / Options Row */}
-            <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center justify-between mt-1">
               <label className="flex items-center gap-2 cursor-pointer group">
-                <div className="relative flex items-center">
-                  <input type="checkbox" className="peer sr-only" />
-                  <div className="w-4 h-4 border border-outline-variant rounded-sm bg-surface-bright peer-checked:bg-secondary peer-checked:border-secondary transition-colors group-hover:border-secondary"></div>
-                  <span 
-                    className="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-on-secondary text-[14px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" 
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    check
-                  </span>
-                </div>
-                <span className="text-sm font-normal text-on-surface-variant group-hover:text-on-surface transition-colors">Keep me logged in</span>
+                <input type="checkbox" className="w-4 h-4 rounded bg-[#1E1E1E] border-white/20 text-[#D81B60] focus:ring-[#D81B60]" />
+                <span className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors">Keep me logged in</span>
               </label>
-              <a href="#" className="text-sm font-normal text-secondary hover:text-on-secondary-fixed-variant hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/20 rounded-sm px-1">
+              <a href="#" onClick={(e) => { e.preventDefault(); alert('초기 비밀번호는 !admin1004 이며, 미설정 시 비밀번호 강제 변경 창이 표시됩니다.'); }} className="text-xs font-bold text-[#D6A56D] hover:underline transition-colors">
                 Forgot Password?
               </a>
             </div>
@@ -238,17 +223,17 @@ export function LoginPage() {
             {/* Submit Button */}
             <button 
               type="submit"
-              className="mt-2 w-full py-3 px-6 bg-secondary text-on-secondary text-sm font-bold tracking-wide rounded-xl shadow-lg shadow-secondary/20 hover:bg-on-secondary-fixed-variant hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-surface-container-lowest active:scale-95 transition-all flex items-center justify-center gap-2 group"
+              className="mt-3 w-full py-3.5 px-6 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-[0.2em] rounded-xl shadow-[0_0_20px_rgba(216,27,96,0.4)] hover:shadow-[0_0_30px_rgba(216,27,96,0.6)] transition-all flex items-center justify-center gap-2 group cursor-pointer"
             >
-              Login
+              <span>Login Console</span>
               <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </button>
           </form>
 
-          {/* Footer subtle text */}
-          <div className="bg-surface px-6 py-3 border-t border-outline-variant/30 flex justify-center">
-            <span className="text-[11px] font-medium text-outline flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[14px]">security</span>
+          {/* Footer Encryption Text */}
+          <div className="bg-[#0B0B0B] px-6 py-4 border-t border-white/10 flex justify-center">
+            <span className="text-[11px] font-mono font-medium text-slate-400 flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[14px] text-[#D6A56D]">security</span>
               SHA-256 Web Crypto Encrypted Session
             </span>
           </div>
@@ -257,44 +242,44 @@ export function LoginPage() {
 
       {/* Force Password Reset Modal */}
       {showResetModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-slate-200">
-            <div className="flex items-center gap-3 mb-4 text-amber-600">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="bg-[#141414] rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-[#D6A56D]/40">
+            <div className="flex items-center gap-3 mb-4 text-[#D6A56D]">
               <span className="material-symbols-outlined text-3xl">warning</span>
-              <h2 className="text-xl font-bold text-slate-900">비밀번호 변경 강제 (Force Reset)</h2>
+              <h2 className="text-xl font-serif font-bold text-white">비밀번호 변경 강제 (Force Reset)</h2>
             </div>
             
-            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            <p className="text-xs text-slate-300 mb-6 leading-relaxed">
               최초 임시 비밀번호로 로그인하셨습니다. 보안 강화를 위해 **안전한 새 비밀번호**를 설정해야 콘솔 대시보드 접근이 가능합니다.
             </p>
 
             <form onSubmit={handleForceResetSubmit} className="space-y-4">
               {modalError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 font-medium">
+                <div className="p-3 bg-[#A80F48]/20 border border-[#D81B60] rounded-xl text-xs text-[#D81B60] font-bold">
                   {modalError}
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">새 비밀번호</label>
+                <label className="block text-xs font-bold text-[#D6A56D] mb-1">새 비밀번호</label>
                 <input 
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="6자리 이상 영문/숫자/특수기호 조합"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-800 transition-colors"
+                  className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-sm text-white focus:outline-none focus:border-[#D81B60] transition-colors placeholder:text-slate-500"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">새 비밀번호 확인</label>
+                <label className="block text-xs font-bold text-[#D6A56D] mb-1">새 비밀번호 확인</label>
                 <input 
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="새 비밀번호 다시 입력"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-800 transition-colors"
+                  className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-sm text-white focus:outline-none focus:border-[#D81B60] transition-colors placeholder:text-slate-500"
                   required
                 />
               </div>
@@ -303,7 +288,7 @@ export function LoginPage() {
                 <button
                   type="submit"
                   disabled={isSubmittingModal}
-                  className="w-full py-3 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md disabled:opacity-50"
+                  className="w-full py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-[0_0_20px_rgba(216,27,96,0.4)] disabled:opacity-50"
                 >
                   {isSubmittingModal ? 'SHA-256 암호화 저장 중...' : '비밀번호 변경 및 콘솔 입장'}
                 </button>
