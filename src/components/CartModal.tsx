@@ -4,6 +4,7 @@ import { CartItem, Order, OrderItem, initialOrders } from '../types/OrderTypes';
 import { getTossPaymentsConfig, savePaymentRecord, TossPaymentRecord } from '../lib/tossPayments';
 import { saveCustomerAddress, getCustomerSavedAddress } from '../lib/customerAddresses';
 import { updateCustomerTierOnOrder } from '../services/membershipService';
+import { performSocialLogin } from '../services/socialAuthService';
 
 interface CartModalProps {
   isOpen: boolean;
@@ -14,10 +15,21 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [checkoutStep, setCheckoutStep] = useState<'cart' | 'checkout' | 'success'>('cart');
+  const [checkoutStep, setCheckoutStep] = useState<'auth_required' | 'cart' | 'checkout' | 'success'>('cart');
   const [orderType, setOrderType] = useState<'member' | 'guest'>('guest');
+  const [isCustomerLoggedIn, setIsCustomerLoggedIn] = useState(false);
 
-  // Checkout Form
+  // Auth Required Modal State
+  const [authTab, setAuthTab] = useState<'login' | 'signup'>('login');
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [signupName, setSignupName] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPhone, setSignupPhone] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+
+  // Checkout Form State
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
@@ -27,6 +39,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
 
   useEffect(() => {
     if (isOpen) {
+      // 1. Load Cart Items
       const savedCart = localStorage.getItem('shop_cart_items');
       if (savedCart) {
         try {
@@ -34,16 +47,19 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
         } catch (e) {
           setCartItems([]);
         }
+      } else {
+        setCartItems([]);
       }
 
-      // Check if logged in customer exists
+      // 2. Check Customer Login Status
       const loggedCust = localStorage.getItem('customer_logged_in_user');
       if (loggedCust) {
         try {
           const user = JSON.parse(loggedCust);
+          setIsCustomerLoggedIn(true);
           setOrderType('member');
-          setGuestName(user.name.replace(' 님', ''));
-          setGuestEmail(user.email);
+          setGuestName(user.name ? user.name.replace(' 님', '') : '');
+          setGuestEmail(user.email || '');
           setGuestPhone(user.phone || '');
 
           const savedAddr = getCustomerSavedAddress(user.email);
@@ -52,11 +68,19 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
             if (savedAddr.recipient_name) setGuestName(savedAddr.recipient_name);
             if (savedAddr.phone) setGuestPhone(savedAddr.phone);
           }
+
+          // Show Cart immediately for logged in customers
+          setCheckoutStep('cart');
         } catch (e) {
+          setIsCustomerLoggedIn(false);
           setOrderType('guest');
+          setCheckoutStep('auth_required');
         }
       } else {
+        setIsCustomerLoggedIn(false);
         setOrderType('guest');
+        // If not logged in, prompt Customer Login / Sign Up first!
+        setCheckoutStep('auth_required');
       }
     }
   }, [isOpen]);
@@ -99,6 +123,89 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
     const itemPrice = item.salePrice || item.price;
     return acc + itemPrice * item.quantity;
   }, 0);
+
+  // Customer Login Submit in Modal
+  const handleModalAuthLogin = (e: FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    if (!authEmail.trim() || !authPassword) {
+      setAuthError('이메일과 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    const customerUser = {
+      id: `cust-${Date.now()}`,
+      name: authEmail.split('@')[0] + ' 님',
+      email: authEmail.trim(),
+      phone: '010-0000-0000',
+      membership: 'SILVER' as const,
+      points: 3000,
+      coupons: 1,
+      joinedDate: new Date().toLocaleDateString(),
+    };
+
+    localStorage.setItem('customer_logged_in_user', JSON.stringify(customerUser));
+    setIsCustomerLoggedIn(true);
+    setOrderType('member');
+    setGuestName(customerUser.name.replace(' 님', ''));
+    setGuestEmail(customerUser.email);
+
+    // Transition directly to Cart view!
+    setCheckoutStep('cart');
+  };
+
+  // Customer Sign Up Submit in Modal
+  const handleModalAuthSignup = (e: FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    if (!signupName.trim() || !signupEmail.trim() || !signupPassword) {
+      setAuthError('필수 입력 항목을 모두 채워주세요.');
+      return;
+    }
+
+    const newUser = {
+      id: `cust-${Date.now()}`,
+      name: signupName.trim() + ' 님',
+      email: signupEmail.trim(),
+      phone: signupPhone.trim() || '010-0000-0000',
+      membership: 'SILVER' as const,
+      points: 3000,
+      coupons: 1,
+      joinedDate: new Date().toLocaleDateString(),
+    };
+
+    localStorage.setItem('customer_logged_in_user', JSON.stringify(newUser));
+    setIsCustomerLoggedIn(true);
+    setOrderType('member');
+    setGuestName(signupName.trim());
+    setGuestEmail(signupEmail.trim());
+
+    alert(`🎉 원데이즈뷰티 회원가입을 축하합니다! (웰컴 3,000P 지급)`);
+    setCheckoutStep('cart');
+  };
+
+  // Social Login Handler
+  const handleSocialLogin = async (provider: 'google' | 'naver') => {
+    const res = await performSocialLogin(provider);
+    if (res.success && res.user) {
+      const customerUser = {
+        id: res.user.id,
+        name: res.user.name + ' 님',
+        email: res.user.email,
+        phone: '010-0000-0000',
+        membership: 'SILVER' as const,
+        points: 3000,
+        coupons: 1,
+        joinedDate: new Date().toLocaleDateString(),
+      };
+      localStorage.setItem('customer_logged_in_user', JSON.stringify(customerUser));
+      setIsCustomerLoggedIn(true);
+      setOrderType('member');
+      setGuestName(res.user.name);
+      setGuestEmail(res.user.email);
+      setCheckoutStep('cart');
+    }
+  };
 
   const handlePlaceOrder = async (e: FormEvent) => {
     e.preventDefault();
@@ -192,11 +299,13 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
       <div className="bg-[#141414] rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-[#D6A56D]/30 max-h-[90vh] flex flex-col text-white">
+        
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[22px] text-[#D6A56D]">shopping_bag</span>
             <h2 className="text-xl font-serif font-bold text-white">
+              {checkoutStep === 'auth_required' && '고객 로그인 & 회원가입 (Customer Auth)'}
               {checkoutStep === 'cart' && `Shopping Bag (${cartItems.length})`}
               {checkoutStep === 'checkout' && 'Checkout (주문 및 결제 작성)'}
               {checkoutStep === 'success' && 'Order Placed (주문 완료)'}
@@ -206,6 +315,183 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
             <span className="material-symbols-outlined text-[24px]">close</span>
           </button>
         </div>
+
+        {/* STEP 0: AUTH REQUIRED (UNAUTHENTICATED CUSTOMERS) */}
+        {checkoutStep === 'auth_required' && (
+          <div className="flex-1 overflow-y-auto space-y-6 pr-1">
+            <div className="bg-[#0B0B0B] p-4 rounded-2xl border border-[#D6A56D]/30 text-center space-y-1">
+              <span className="inline-block px-3 py-0.5 rounded-full bg-[#D81B60]/20 text-[#D81B60] text-[10px] font-bold uppercase tracking-widest mb-1">
+                Member Benefits
+              </span>
+              <h3 className="text-lg font-serif font-bold text-white">원데이즈뷰티 회원 전용 혜택</h3>
+              <p className="text-xs text-slate-400">
+                로그인 시 **신규가입 3,000P 적립금**, 자동 배송지 맵핑 및 구매 등급 혜택이 적용됩니다.
+              </p>
+            </div>
+
+            {/* Auth Tab Switcher */}
+            <div className="flex bg-[#1E1E1E] p-1 rounded-xl border border-white/10">
+              <button
+                type="button"
+                onClick={() => setAuthTab('login')}
+                className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-colors ${
+                  authTab === 'login' ? 'bg-[#D81B60] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                고객 로그인 (Login)
+              </button>
+              <button
+                type="button"
+                onClick={() => setAuthTab('signup')}
+                className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-colors ${
+                  authTab === 'signup' ? 'bg-[#D81B60] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                회원가입 (Sign Up)
+              </button>
+            </div>
+
+            {/* Login Tab */}
+            {authTab === 'login' && (
+              <form onSubmit={handleModalAuthLogin} className="space-y-4">
+                {authError && (
+                  <div className="p-3 bg-[#A80F48]/20 border border-[#D81B60] rounded-xl text-xs text-[#D81B60] font-bold">
+                    {authError}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-bold text-[#D6A56D] mb-1">이메일 주소</label>
+                  <input
+                    type="email"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#D6A56D] mb-1">비밀번호</label>
+                  <input
+                    type="password"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    placeholder="비밀번호 입력"
+                    className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-[0_0_20px_rgba(216,27,96,0.4)]"
+                >
+                  로그인하고 장바구니 보기
+                </button>
+
+                {/* Social Auth Buttons */}
+                <div className="pt-2 border-t border-white/10 space-y-2 text-center">
+                  <p className="text-[11px] text-slate-400">간편 소셜 로그인</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => handleSocialLogin('google')}
+                      className="py-2.5 bg-white text-slate-900 text-xs font-bold rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <span>Google 계정</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSocialLogin('naver')}
+                      className="py-2.5 bg-[#03C75A] text-white text-xs font-bold rounded-xl hover:bg-[#02b350] transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <span>네이버 로그인</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+
+            {/* Sign Up Tab */}
+            {authTab === 'signup' && (
+              <form onSubmit={handleModalAuthSignup} className="space-y-4">
+                {authError && (
+                  <div className="p-3 bg-[#A80F48]/20 border border-[#D81B60] rounded-xl text-xs text-[#D81B60] font-bold">
+                    {authError}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-bold text-[#D6A56D] mb-1">성명</label>
+                  <input
+                    type="text"
+                    value={signupName}
+                    onChange={(e) => setSignupName(e.target.value)}
+                    placeholder="홍길동"
+                    className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#D6A56D] mb-1">이메일 주소</label>
+                  <input
+                    type="email"
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-[#D6A56D] mb-1">연락처</label>
+                    <input
+                      type="tel"
+                      value={signupPhone}
+                      onChange={(e) => setSignupPhone(e.target.value)}
+                      placeholder="010-1234-5678"
+                      className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#D6A56D] mb-1">비밀번호</label>
+                    <input
+                      type="password"
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
+                      placeholder="비밀번호 설정"
+                      className="w-full px-4 py-3 bg-[#1E1E1E] border border-white/20 rounded-xl text-xs text-white focus:outline-none focus:border-[#D81B60]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-[0_0_20px_rgba(216,27,96,0.4)]"
+                >
+                  회원가입 후 장바구니 보기 (웰컴 3,000P)
+                </button>
+              </form>
+            )}
+
+            {/* Guest Bypass Option */}
+            <div className="pt-2 text-center border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => setCheckoutStep('cart')}
+                className="text-xs text-slate-400 hover:text-white underline transition-colors"
+              >
+                비회원으로 장바구니 상품만 계속 확인하기 ➔
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* STEP 1: CART LIST */}
         {checkoutStep === 'cart' && (

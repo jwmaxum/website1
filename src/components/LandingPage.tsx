@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Product, initialProducts, initialCategories } from './ProductManagement';
+import { CartItem } from '../types/OrderTypes';
 
 export function LandingPage() {
   const [searchParams] = useSearchParams();
@@ -34,6 +35,17 @@ export function LandingPage() {
     } else {
       setCategories(initialCategories);
     }
+
+    // Sync initial cart count from localStorage
+    const savedCart = localStorage.getItem('shop_cart_items');
+    if (savedCart) {
+      try {
+        const items: CartItem[] = JSON.parse(savedCart);
+        setCartCount(items.reduce((acc, item) => acc + item.quantity, 0));
+      } catch (e) {
+        // default
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -54,7 +66,35 @@ export function LandingPage() {
   });
 
   const handleAddToCart = (prd: Product) => {
-    setCartCount((prev) => prev + 1);
+    const savedCart = localStorage.getItem('shop_cart_items');
+    let cartItems: CartItem[] = [];
+    if (savedCart) {
+      try {
+        cartItems = JSON.parse(savedCart);
+      } catch (e) {
+        cartItems = [];
+      }
+    }
+
+    const existingIndex = cartItems.findIndex((item) => item.productId === prd.id);
+    if (existingIndex > -1) {
+      cartItems[existingIndex].quantity += 1;
+    } else {
+      cartItems.push({
+        productId: prd.id,
+        code: prd.code,
+        name: prd.name,
+        price: prd.price,
+        salePrice: prd.salePrice,
+        brand: prd.brand,
+        imageUrl: prd.imageUrl,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem('shop_cart_items', JSON.stringify(cartItems));
+    const totalQty = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+    setCartCount(totalQty);
     alert(`'${prd.name}' 제품이 장바구니에 담겼습니다.`);
   };
 
