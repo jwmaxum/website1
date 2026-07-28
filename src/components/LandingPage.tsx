@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Product, initialProducts, initialCategories } from './ProductManagement';
 import { CartItem } from '../types/OrderTypes';
+import { AnatoliaHeroConfig, defaultAnatoliaHeroConfig } from '../types/BrandTypes';
 
 export function LandingPage() {
   const [searchParams] = useSearchParams();
@@ -12,6 +13,30 @@ export function LandingPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartCount, setCartCount] = useState<number>(0);
+
+  // Anatolia Hero & Intro Animation Config State
+  const [heroConfig, setHeroConfig] = useState<AnatoliaHeroConfig>(defaultAnatoliaHeroConfig);
+  const [scrollY, setScrollY] = useState<number>(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const savedHero = localStorage.getItem('anatolia_hero_config');
+    if (savedHero) {
+      try {
+        setHeroConfig(JSON.parse(savedHero));
+      } catch (e) {
+        console.error('Failed to parse anatolia_hero_config:', e);
+      }
+    }
+  }, []);
+
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('shop_products');
@@ -99,76 +124,129 @@ export function LandingPage() {
   };
 
   return (
-    <div className="bg-[#050505] text-[#FAFAFA] min-h-screen">
-      {/* 1. Cinematic Full-Screen Hero (100vh) */}
-      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-[#050505] pt-20">
+    <div className="bg-[#050505] text-[#FAFAFA] min-h-screen selection:bg-[#D81B60] selection:text-white">
+      {/* 1. Anatolia Style Cinematic Fullscreen Video Mask Hero & Staggered Reveal */}
+      <section className="relative w-full min-h-[110vh] flex flex-col justify-between overflow-hidden bg-[#050505] pt-24 pb-16">
         {/* Background Ambient Pink & Rose Gold Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#D81B60]/15 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-[#D6A56D]/10 rounded-full blur-[100px] pointer-events-none" />
-
-        {/* Hero Background Image / Video */}
-        <img
-          src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=1920&auto=format&fit=crop"
-          alt="Luxury Cosmetic Hero"
-          className="absolute inset-0 w-full h-full object-cover opacity-35 scale-105 filter brightness-75 contrast-125"
+        <div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#D81B60]/20 rounded-full blur-[160px] pointer-events-none transition-transform duration-700"
+          style={{ transform: `translate(-50%, ${scrollY * 0.25}px)` }}
         />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#D6A56D]/15 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Hero Left Content */}
-          <div className="lg:col-span-7 space-y-8 text-left">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-[#D6A56D]/40 text-[#D6A56D] text-xs font-bold uppercase tracking-[0.3em] backdrop-blur-md">
-              High Fashion Flagship Collection
-            </span>
+        {/* Anatolia Scroll-Driven Video Mask Background */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+          <div
+            className="w-full h-full transition-transform duration-100 ease-out"
+            style={{
+              transform: `scale(${1 + Math.min(scrollY / 1000, 0.25)})`,
+              filter: `brightness(${Math.max(0.4, 0.75 - scrollY / 1200)}) contrast(1.1)`,
+            }}
+          >
+            {heroConfig.videoUrl ? (
+              <video
+                src={heroConfig.videoUrl}
+                poster={heroConfig.posterUrl}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={heroConfig.posterUrl}
+                alt="Anatolia Hero Visual"
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
+          {/* Subtle Mask Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-[#050505]/70" />
+        </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif leading-[1.1] tracking-tight text-white font-light">
-              DISCOVER LUXURY <br />
-              <span className="italic font-normal text-[#D6A56D]">BEAUTY BEYOND</span> SKIN
-            </h1>
+        {/* Hero Top Tagline & Badge */}
+        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 md:px-16 flex justify-between items-center">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-[#D6A56D]/40 text-[#D6A56D] text-xs font-bold uppercase tracking-[0.35em] backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-[#D81B60] animate-ping" />
+            {heroConfig.badgeText || 'ARCHITECTURAL BEAUTY'}
+          </span>
+          <span className="text-xs font-serif tracking-[0.3em] text-slate-400 uppercase hidden sm:inline">
+            EST. ANATOLIA HOUSE
+          </span>
+        </div>
 
-            <p className="text-sm md:text-base text-[#B7B7B7] max-w-xl font-light leading-relaxed">
-              조선 시대의 고귀한 한방 성분과 현대 더마톨로지 스킨케어 공학의 만남.
-              비할 데 없는 럭셔리 텍스처와 피부 본연의 투명한 빛을 선사합니다.
+        {/* Hero Center Staggered Typography Reveal */}
+        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 md:px-16 my-auto pt-12 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+          <div className="lg:col-span-8 space-y-6 text-left">
+            <p className="text-xs md:text-sm font-sans font-bold text-[#D6A56D] uppercase tracking-[0.5em] animate-in fade-in duration-700">
+              {heroConfig.introSubtitle}
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-4">
-              <a
-                href="#product-catalog"
-                className="px-8 py-4 bg-[#D81B60] hover:bg-[#A80F48] text-white text-xs font-bold uppercase tracking-[0.25em] rounded-xl transition-all shadow-[0_0_30px_rgba(216,27,96,0.4)] hover:shadow-[0_0_40px_rgba(216,27,96,0.6)] border border-[#D81B60]"
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif leading-[1.05] tracking-tight text-white font-extralight uppercase">
+              {heroConfig.introTitle.split('\n').map((line, idx) => (
+                <span key={idx} className="block overflow-hidden">
+                  <span
+                    className="inline-block transform transition-transform duration-1000 ease-out"
+                    style={{ transform: `translateY(${Math.max(0, 50 - scrollY * 0.1)}px)` }}
+                  >
+                    {line}
+                  </span>
+                </span>
+              ))}
+            </h1>
+
+            <p className="text-sm md:text-base text-[#B7B7B7] max-w-2xl font-light leading-relaxed pt-2">
+              {heroConfig.introDescription}
+            </p>
+
+            <div className="flex flex-wrap gap-5 pt-4">
+              <Link
+                to={heroConfig.ctaLink || '/brand'}
+                className="px-8 py-4 bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold uppercase tracking-[0.3em] rounded-xl transition-all duration-300 shadow-[0_0_35px_rgba(216,27,96,0.4)] border border-[#D81B60]"
               >
-                Shop Collection
-              </a>
+                {heroConfig.ctaText || 'EXPLORE COLLECTION'}
+              </Link>
               <a
                 href="#brand-story"
-                className="px-8 py-4 bg-transparent hover:bg-[#D6A56D]/10 text-[#D6A56D] hover:text-white text-xs font-bold uppercase tracking-[0.25em] rounded-xl transition-all border border-[#D6A56D]/50"
+                className="px-8 py-4 bg-white/5 hover:bg-[#D6A56D]/15 text-[#D6A56D] hover:text-white text-xs font-bold uppercase tracking-[0.3em] rounded-xl transition-all duration-300 border border-[#D6A56D]/40 backdrop-blur-md"
               >
-                Discover Story
+                DISCOVER PHILOSOPHY
               </a>
             </div>
           </div>
 
-          {/* Hero Right Visual Card */}
-          <div className="lg:col-span-5 hidden lg:block">
-            <div className="relative p-2 rounded-3xl bg-gradient-to-b from-[#D6A56D]/30 via-white/5 to-[#D81B60]/30 shadow-2xl">
-              <div className="bg-[#141414] rounded-[22px] overflow-hidden border border-white/10 p-6 space-y-4">
-                <div className="w-full aspect-[4/5] rounded-xl overflow-hidden relative">
-                  <span className="absolute top-3 left-3 bg-[#D6A56D] text-[#050505] text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest z-10">
-                    Flagship Arrival
-                  </span>
-                  <img
-                    src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80"
-                    alt="Featured Product"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                </div>
-                <div className="flex justify-between items-end pt-2">
-                  <div>
-                    <p className="text-[11px] font-bold text-[#D6A56D] uppercase tracking-wider">Signature Elixir</p>
-                    <h3 className="text-lg font-serif font-bold text-white mt-1">붉은팥 PDRN 모공탄력 세럼</h3>
-                  </div>
-                  <span className="text-xl font-serif font-bold text-white">₩22,100</span>
-                </div>
+          {/* Right Floating Indicator */}
+          <div className="lg:col-span-4 hidden lg:flex flex-col items-end text-right space-y-4">
+            <div className="w-32 h-[1px] bg-gradient-to-l from-[#D6A56D] to-transparent" />
+            <span className="text-[11px] font-serif tracking-[0.3em] text-[#D6A56D] uppercase">
+              ANATOLIA CINEMATIC EXPERIENCE
+            </span>
+            <p className="text-[10px] text-slate-400 max-w-[200px]">
+              스크롤을 내려 건축적 아우라와 시네마틱 스토리를 감상하세요.
+            </p>
+          </div>
+        </div>
+
+        {/* Hero Bottom Parallax Cards Preview */}
+        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 md:px-16 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {heroConfig.parallaxCards.map((card) => (
+              <div
+                key={card.id}
+                className="group relative p-6 rounded-2xl bg-[#141414]/80 border border-[#D6A56D]/20 backdrop-blur-xl hover:border-[#D81B60]/60 transition-all duration-500 hover:-translate-y-2 overflow-hidden shadow-2xl"
+              >
+                <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-[0.25em] block mb-2">
+                  {card.category}
+                </span>
+                <h4 className="text-lg font-serif text-white tracking-wide group-hover:text-[#D6A56D] transition-colors mb-2">
+                  {card.title}
+                </h4>
+                <p className="text-xs text-slate-400 font-light leading-relaxed">
+                  {card.description}
+                </p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LanguageCode, supportedLanguages, translations } from '../i18n';
 import { LegalTermsModal } from './LegalTermsModal';
 import { CartModal } from './CartModal';
+import { AnatoliaFooterConfig, defaultAnatoliaFooterConfig } from '../types/BrandTypes';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -21,6 +22,10 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
   const [brandNameEn, setBrandNameEn] = useState('ONEDAYS BEAUTY');
   const [faviconUrl, setFaviconUrl] = useState('');
+
+  // Anatolia Interactive Footer State
+  const [footerConfig, setFooterConfig] = useState<AnatoliaFooterConfig>(defaultAnatoliaFooterConfig);
+  const [openMobileCol, setOpenMobileCol] = useState<string | null>(null);
 
   const location = useLocation();
 
@@ -55,6 +60,15 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       link.href = savedFavicon;
     }
 
+    const savedFooter = localStorage.getItem('anatolia_footer_config');
+    if (savedFooter) {
+      try {
+        setFooterConfig(JSON.parse(savedFooter));
+      } catch (e) {
+        console.error('Failed to parse anatolia_footer_config:', e);
+      }
+    }
+
     const savedShowMall = localStorage.getItem('show_shopping_mall');
     if (savedShowMall !== null) {
       setShowShoppingMall(JSON.parse(savedShowMall));
@@ -65,6 +79,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       setCurrentLang(savedLang);
     }
   }, []);
+
 
   const handleLanguageChange = (code: LanguageCode) => {
     setCurrentLang(code);
@@ -267,84 +282,137 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       {/* Cart Modal Container */}
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-      {/* Legal Terms Modal Container */}
-      {legalModalType && (
-        <LegalTermsModal type={legalModalType} onClose={() => setLegalModalType(null)} />
-      )}
+      {/* Anatolia Style High-Fashion Interactive Luxury Footer */}
+      <footer className="w-full bg-[#050505] text-[#FAFAFA] border-t border-[#D6A56D]/20 pt-24 pb-12 px-6 md:px-16 relative overflow-hidden select-none">
+        {/* Giant Architectural Brand Watermark background */}
+        <div className="w-full text-center py-10 opacity-15 hover:opacity-30 transition-opacity duration-700 pointer-events-none">
+          <h2 className="text-[11vw] font-serif font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-b from-[#FAFAFA] via-[#D6A56D] to-transparent uppercase leading-none whitespace-nowrap">
+            {footerConfig.watermarkText || brandNameEn || 'ANATOLIA'}
+          </h2>
+          <p className="text-xs md:text-sm tracking-[0.6em] font-sans font-bold text-[#D6A56D] uppercase mt-2">
+            {footerConfig.subTagline}
+          </p>
+        </div>
 
-      {/* Pure Black Luxury Footer */}
-      <footer className="w-full bg-[#050505] border-t border-[#D6A56D]/20 pt-20 pb-12 px-6 md:px-12">
-        <div className="max-w-[1536px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          {/* Col 1: Brand Info */}
-          <div className="space-y-4">
-            <h4 className="text-2xl font-serif uppercase tracking-[0.2em] text-[#D6A56D]">
-              {brandNameEn || 'ONEDAYS BEAUTY'}
-            </h4>
-            <p className="text-xs font-bold text-[#B7B7B7]">{brandNameKo || '원데이즈뷰티'}</p>
-            <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              고급스러운 감성과 현대 피부 과학의 조화로 탄생한 하이 패션 플래그십 클린 뷰티 브랜드.
+        {/* Interactive Column Navigation & Newsletter Grid */}
+        <div className="max-w-[1536px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 my-16 relative z-10">
+          {/* Left Brand Identity & Tagline (4 cols) */}
+          <div className="lg:col-span-4 space-y-6">
+            <Link to="/" className="inline-block">
+              <span className="text-3xl font-serif tracking-[0.25em] text-[#D6A56D] hover:text-white transition-colors uppercase font-bold">
+                {brandNameEn || 'ANATOLIA BEAUTY'}
+              </span>
+            </Link>
+            <p className="text-xs font-semibold text-slate-400 leading-relaxed max-w-md">
+              건축학적 우아함과 지중해 정취, 피부 과학의 조화로 태어난 하이 패션 플래그십 뷰티 하우스. 시대를 초월한 럭셔리 아우라를 선사합니다.
             </p>
+            <div className="flex items-center gap-4 text-xs font-bold text-[#D6A56D] pt-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-[#D81B60] animate-pulse" />
+              <span>GLOBAL FLAGSHIP EXPERIENCE</span>
+            </div>
           </div>
 
-          {/* Col 2: Navigation Links */}
-          <div className="space-y-3">
-            <h5 className="text-xs font-bold uppercase tracking-widest text-[#D6A56D]">Navigation</h5>
-            <ul className="space-y-2 text-xs text-slate-300">
-              <li><Link to="/company" className="hover:text-[#D81B60] transition-colors">{t('company')}</Link></li>
-              <li><Link to="/brand" className="hover:text-[#D81B60] transition-colors">{t('brand')}</Link></li>
-              <li><Link to="/media" className="hover:text-[#D81B60] transition-colors">{t('media')}</Link></li>
-              <li><Link to="/" className="hover:text-[#D81B60] transition-colors">{t('shop')}</Link></li>
-            </ul>
+          {/* Middle Columns (Dynamic Admin Configured Columns - 5 cols) */}
+          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {footerConfig.columns.map((col) => (
+              <div key={col.id} className="space-y-4">
+                {/* Mobile Accordion Toggle Header */}
+                <button
+                  onClick={() => setOpenMobileCol(openMobileCol === col.id ? null : col.id)}
+                  className="w-full flex justify-between items-center sm:block text-left group"
+                >
+                  <h5 className="text-xs font-bold uppercase tracking-[0.2em] text-[#D6A56D] group-hover:text-[#D81B60] transition-colors pb-1 border-b border-[#D6A56D]/20 sm:border-none">
+                    {col.title}
+                  </h5>
+                  <span className="sm:hidden material-symbols-outlined text-[16px] text-[#D6A56D]">
+                    {openMobileCol === col.id ? 'remove' : 'add'}
+                  </span>
+                </button>
+
+                {/* Submenu List */}
+                <ul className={`space-y-2.5 text-xs font-medium text-slate-300 ${
+                  openMobileCol === col.id ? 'block' : 'hidden sm:block'
+                }`}>
+                  {col.links.map((link) => (
+                    <li key={link.id}>
+                      {link.url === 'terms' || link.url === 'privacy' || link.url === 'businessInfo' ? (
+                        <button
+                          onClick={() => setLegalModalType(link.url as any)}
+                          className="hover:text-[#D81B60] transition-colors text-left flex items-center gap-1.5 group/item"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-transparent group-hover/item:bg-[#D81B60] transition-colors" />
+                          <span>{link.label}</span>
+                        </button>
+                      ) : link.isExternal || link.url.startsWith('http') ? (
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:text-[#D81B60] transition-colors flex items-center gap-1.5 group/item"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-transparent group-hover/item:bg-[#D81B60] transition-colors" />
+                          <span>{link.label}</span>
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.url}
+                          className="hover:text-[#D81B60] transition-colors flex items-center gap-1.5 group/item"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-transparent group-hover/item:bg-[#D81B60] transition-colors" />
+                          <span>{link.label}</span>
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
-          {/* Col 3: Legal & Support */}
-          <div className="space-y-3">
-            <h5 className="text-xs font-bold uppercase tracking-widest text-[#D6A56D]">Customer & Legal</h5>
-            <ul className="space-y-2 text-xs text-slate-300">
-              <li>
-                <button onClick={() => setLegalModalType('terms')} className="hover:text-[#D81B60] transition-colors text-left">
-                  {t('terms')}
-                </button>
-              </li>
-              <li>
-                <button onClick={() => setLegalModalType('privacy')} className="hover:text-[#D81B60] transition-colors text-left font-bold text-white">
-                  {t('privacy')}
-                </button>
-              </li>
-              <li>
-                <button onClick={() => setLegalModalType('businessInfo')} className="hover:text-[#D81B60] transition-colors text-left">
-                  {t('businessInfo')}
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 4: Newsletter */}
-          <div className="space-y-4">
-            <h5 className="text-xs font-bold uppercase tracking-widest text-[#D6A56D]">Newsletter</h5>
-            <p className="text-xs text-slate-400">럭셔리 컬렉션 신규 출시 및 프라이빗 이벤트를 구독하세요.</p>
-            <div className="flex">
+          {/* Right Newsletter Column (3 cols) */}
+          <div className="lg:col-span-3 space-y-4 bg-[#141414]/60 p-6 rounded-2xl border border-[#D6A56D]/20">
+            <h5 className="text-xs font-bold uppercase tracking-[0.2em] text-[#D6A56D]">
+              {footerConfig.newsletterTitle}
+            </h5>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {footerConfig.newsletterDescription}
+            </p>
+            <form onSubmit={(e) => { e.preventDefault(); alert('뉴스레터 구독 신청이 완료되었습니다.'); }} className="space-y-3 pt-2">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="bg-[#141414] border border-[#D6A56D]/30 px-3.5 py-2 text-xs text-white rounded-l-lg focus:outline-none focus:border-[#D81B60] flex-1"
+                required
+                placeholder="Enter email address"
+                className="w-full bg-[#050505] border border-[#D6A56D]/30 px-3.5 py-2.5 text-xs text-white rounded-lg focus:outline-none focus:border-[#D81B60] transition-colors"
               />
-              <button className="bg-[#D81B60] hover:bg-[#A80F48] text-white px-4 py-2 text-xs font-bold rounded-r-lg transition-colors">
-                JOIN
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 shadow-lg shadow-[#D81B60]/20"
+              >
+                SUBSCRIBE
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
-        <div className="max-w-[1536px] mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
-          <p>Copyright © {brandNameEn || 'ONEDAYS BEAUTY'} {t('rights')}</p>
-          <div className="flex gap-6">
-            <span className="hover:text-white cursor-pointer">Instagram</span>
-            <span className="hover:text-white cursor-pointer">YouTube</span>
-            <span className="hover:text-white cursor-pointer">Vogue Media</span>
+        {/* Footer Bottom Rights & Social Bar */}
+        <div className="max-w-[1536px] mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4 relative z-10">
+          <p className="tracking-wider">
+            © {new Date().getFullYear()} {footerConfig.copyrightText || (brandNameEn + ' ALL RIGHTS RESERVED.')}
+          </p>
+          <div className="flex gap-8 text-xs font-bold tracking-widest text-slate-400 uppercase">
+            <a href={footerConfig.instagramUrl} target="_blank" rel="noreferrer" className="hover:text-[#D81B60] transition-colors">
+              INSTAGRAM
+            </a>
+            <a href={footerConfig.youtubeUrl} target="_blank" rel="noreferrer" className="hover:text-[#D81B60] transition-colors">
+              YOUTUBE
+            </a>
+            <a href={footerConfig.vogueUrl} target="_blank" rel="noreferrer" className="hover:text-[#D81B60] transition-colors">
+              VOGUE MEDIA
+            </a>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
