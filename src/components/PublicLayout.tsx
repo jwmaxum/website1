@@ -18,6 +18,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // Customer Member Auth State
+  const [customerUser, setCustomerUser] = useState<{ id: string; name: string; email: string } | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
   // Dynamic Brand & Favicon States
   const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
   const [brandNameEn, setBrandNameEn] = useState('ONEDAYS BEAUTY');
@@ -78,7 +84,54 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     if (savedLang && translations[savedLang]) {
       setCurrentLang(savedLang);
     }
+
+    const savedUser = localStorage.getItem('customer_user');
+    if (savedUser) {
+      try {
+        setCustomerUser(JSON.parse(savedUser));
+      } catch (e) {
+        console.error('Failed to parse customer_user:', e);
+      }
+    }
   }, []);
+
+  const handleCustomerLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginEmail) {
+      alert('이메일을 입력해 주세요.');
+      return;
+    }
+    const userName = loginEmail.split('@')[0] || '회원';
+    const userObj = {
+      id: 'cust_' + Date.now(),
+      name: userName,
+      email: loginEmail,
+    };
+    localStorage.setItem('customer_user', JSON.stringify(userObj));
+    setCustomerUser(userObj);
+    setIsLoginModalOpen(false);
+    setLoginEmail('');
+    setLoginPassword('');
+    alert(`${userName}님 환영합니다! 쇼핑몰 로그인이 완료되었습니다.`);
+  };
+
+  const handleDemoLogin = () => {
+    const userObj = {
+      id: 'cust_demo',
+      name: '김민서',
+      email: 'minseo@example.com',
+    };
+    localStorage.setItem('customer_user', JSON.stringify(userObj));
+    setCustomerUser(userObj);
+    setIsLoginModalOpen(false);
+    alert('김민서 회원님으로 로그인되었습니다.');
+  };
+
+  const handleCustomerLogout = () => {
+    localStorage.removeItem('customer_user');
+    setCustomerUser(null);
+    alert('로그아웃되었습니다.');
+  };
 
 
   const handleLanguageChange = (code: LanguageCode) => {
@@ -224,6 +277,34 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               )}
             </div>
 
+            {/* Customer Auth User Info & Login/Logout Button */}
+            {customerUser ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/mypage"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D6A56D]/15 border border-[#D6A56D]/40 text-[#D6A56D] hover:text-white hover:bg-[#D6A56D]/30 transition-all text-xs font-bold"
+                  title="My Page"
+                >
+                  <span className="material-symbols-outlined text-[16px]">account_circle</span>
+                  <span>{customerUser.name}님</span>
+                </Link>
+                <button
+                  onClick={handleCustomerLogout}
+                  className="px-3 py-1.5 rounded-full border border-white/20 hover:border-[#D81B60] text-slate-300 hover:text-[#D81B60] transition-colors text-xs font-semibold"
+                >
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold transition-all shadow-md shadow-[#D81B60]/20"
+              >
+                <span className="material-symbols-outlined text-[16px]">login</span>
+                <span>로그인</span>
+              </button>
+            )}
+
             {/* Cart Modal Trigger Button */}
             {showShoppingMall && (
               <button
@@ -240,6 +321,38 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-[#0B0B0B] border-b border-[#D6A56D]/30 px-6 py-6 space-y-4 animate-in slide-in-from-top duration-300">
+            {/* Mobile Auth Banner */}
+            <div className="pb-3 border-b border-white/10 flex justify-between items-center">
+              {customerUser ? (
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#D6A56D] text-[20px]">account_circle</span>
+                    <span className="text-xs font-bold text-white">{customerUser.name}님 (일반회원)</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleCustomerLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-xs text-[#D81B60] font-bold underline"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsLoginModalOpen(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-[#D81B60] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-[16px]">login</span>
+                  <span>일반회원 로그인</span>
+                </button>
+              )}
+            </div>
+
             <Link
               to="/company"
               onClick={() => setMobileMenuOpen(false)}
@@ -270,6 +383,15 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 {t('shop')}
               </Link>
             )}
+            {customerUser && (
+              <Link
+                to="/mypage"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-sm font-semibold tracking-wider text-[#D6A56D] hover:text-white"
+              >
+                마이페이지 (My Page)
+              </Link>
+            )}
           </div>
         )}
       </header>
@@ -281,6 +403,84 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
       {/* Cart Modal Container */}
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      {/* Customer Luxury Login Modal */}
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="bg-[#141414] border border-[#D6A56D]/30 rounded-3xl p-8 max-w-md w-full shadow-2xl relative space-y-6">
+            <button
+              onClick={() => setIsLoginModalOpen(false)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[22px]">close</span>
+            </button>
+
+            <div className="text-center space-y-2">
+              <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-[0.3em]">
+                SHOPPING MALL MEMBER ACCESS
+              </span>
+              <h3 className="text-2xl font-serif text-white font-bold">일반회원 로그인</h3>
+              <p className="text-xs text-slate-400">
+                원데이즈뷰티 회원으로 로그인하고 시그니처 혜택을 누려보세요.
+              </p>
+            </div>
+
+            <form onSubmit={handleCustomerLogin} className="space-y-4 pt-2">
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                  이메일 주소
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                  비밀번호
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3.5 bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#D81B60]/20"
+              >
+                로그인하기
+              </button>
+            </form>
+
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-500">
+                <span className="bg-[#141414] px-3">빠른 원터치 체험</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleDemoLogin}
+              className="w-full py-3 bg-white/5 hover:bg-[#D6A56D]/20 border border-[#D6A56D]/40 text-[#D6A56D] hover:text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[18px]">verified_user</span>
+              <span>데모 일반회원 (김민서) 즉시 로그인</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Anatolia Style High-Fashion Interactive Luxury Footer */}
       <footer className="w-full bg-[#050505] text-[#FAFAFA] border-t border-[#D6A56D]/20 pt-24 pb-12 px-6 md:px-16 relative overflow-hidden select-none">
