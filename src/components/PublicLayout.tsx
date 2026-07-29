@@ -21,8 +21,23 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   // Customer Member Auth State
   const [customerUser, setCustomerUser] = useState<{ id: string; name: string; email: string } | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register_terms' | 'register_form'>('login');
+  
+  // Login Inputs
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+
+  // Register Inputs & Terms
+  const [regTermsAll, setRegTermsAll] = useState(false);
+  const [regTermService, setRegTermService] = useState(false);
+  const [regTermPrivacy, setRegTermPrivacy] = useState(false);
+  const [regTermMarketing, setRegTermMarketing] = useState(false);
+
+  const [regName, setRegName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regPasswordConfirm, setRegPasswordConfirm] = useState('');
+  const [regPhone, setRegPhone] = useState('');
 
   // Dynamic Brand & Favicon States
   const [brandNameKo, setBrandNameKo] = useState('원데이즈뷰티');
@@ -131,6 +146,59 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     localStorage.removeItem('customer_user');
     setCustomerUser(null);
     alert('로그아웃되었습니다.');
+  };
+
+  const handleToggleAllTerms = (checked: boolean) => {
+    setRegTermsAll(checked);
+    setRegTermService(checked);
+    setRegTermPrivacy(checked);
+    setRegTermMarketing(checked);
+  };
+
+  const handleProceedToRegisterForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!regTermService || !regTermPrivacy) {
+      alert('필수 약관에 모두 동의하셔야 회원가입 진행이 가능합니다.');
+      return;
+    }
+    setAuthMode('register_form');
+  };
+
+  const handleRegisterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!regName || !regEmail || !regPassword) {
+      alert('필수 정보를 모두 입력해 주세요.');
+      return;
+    }
+    if (regPassword !== regPasswordConfirm) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    const newUser = {
+      id: 'cust_' + Date.now(),
+      name: regName,
+      email: regEmail,
+      phone: regPhone,
+    };
+
+    localStorage.setItem('customer_user', JSON.stringify(newUser));
+    setCustomerUser(newUser);
+    setIsLoginModalOpen(false);
+    setAuthMode('login');
+
+    // Clear inputs
+    setRegName('');
+    setRegEmail('');
+    setRegPassword('');
+    setRegPasswordConfirm('');
+    setRegPhone('');
+    setRegTermsAll(false);
+    setRegTermService(false);
+    setRegTermPrivacy(false);
+    setRegTermMarketing(false);
+
+    alert(`'${regName}'님, 회원가입이 성공적으로 완료되었습니다! 환영합니다.`);
   };
 
 
@@ -404,80 +472,299 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       {/* Cart Modal Container */}
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-      {/* Customer Luxury Login Modal */}
+      {/* Customer Luxury Login & Registration Modal */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
-          <div className="bg-[#141414] border border-[#D6A56D]/30 rounded-3xl p-8 max-w-md w-full shadow-2xl relative space-y-6">
+          <div className="bg-[#141414] border border-[#D6A56D]/30 rounded-3xl p-8 max-w-md w-full shadow-2xl relative space-y-6 max-h-[90vh] overflow-y-auto">
             <button
-              onClick={() => setIsLoginModalOpen(false)}
+              onClick={() => {
+                setIsLoginModalOpen(false);
+                setAuthMode('login');
+              }}
               className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
             >
               <span className="material-symbols-outlined text-[22px]">close</span>
             </button>
 
-            <div className="text-center space-y-2">
-              <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-[0.3em]">
-                SHOPPING MALL MEMBER ACCESS
-              </span>
-              <h3 className="text-2xl font-serif text-white font-bold">일반회원 로그인</h3>
-              <p className="text-xs text-slate-400">
-                원데이즈뷰티 회원으로 로그인하고 시그니처 혜택을 누려보세요.
-              </p>
-            </div>
+            {/* 1. LOGIN MODE */}
+            {authMode === 'login' && (
+              <>
+                <div className="text-center space-y-2">
+                  <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-[0.3em]">
+                    SHOPPING MALL MEMBER ACCESS
+                  </span>
+                  <h3 className="text-2xl font-serif text-white font-bold">일반회원 로그인</h3>
+                  <p className="text-xs text-slate-400">
+                    원데이즈뷰티 회원으로 로그인하고 시그니처 혜택을 누려보세요.
+                  </p>
+                </div>
 
-            <form onSubmit={handleCustomerLogin} className="space-y-4 pt-2">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  이메일 주소
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
-                />
-              </div>
+                <form onSubmit={handleCustomerLogin} className="space-y-4 pt-2">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                      이메일 주소
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      placeholder="name@example.com"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  비밀번호
-                </label>
-                <input
-                  type="password"
-                  required
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
-                />
-              </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                      비밀번호
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
 
-              <button
-                type="submit"
-                className="w-full py-3.5 bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#D81B60]/20"
-              >
-                로그인하기
-              </button>
-            </form>
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#D81B60]/20"
+                  >
+                    로그인하기
+                  </button>
+                </form>
 
-            <div className="relative py-2">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
-              </div>
-              <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-500">
-                <span className="bg-[#141414] px-3">빠른 원터치 체험</span>
-              </div>
-            </div>
+                <div className="relative py-2">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/10" />
+                  </div>
+                  <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-500">
+                    <span className="bg-[#141414] px-3">빠른 원터치 체험</span>
+                  </div>
+                </div>
 
-            <button
-              onClick={handleDemoLogin}
-              className="w-full py-3 bg-white/5 hover:bg-[#D6A56D]/20 border border-[#D6A56D]/40 text-[#D6A56D] hover:text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[18px]">verified_user</span>
-              <span>데모 일반회원 (김민서) 즉시 로그인</span>
-            </button>
+                <button
+                  onClick={handleDemoLogin}
+                  className="w-full py-3 bg-white/5 hover:bg-[#D6A56D]/20 border border-[#D6A56D]/40 text-[#D6A56D] hover:text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                  <span>데모 일반회원 (김민서) 즉시 로그인</span>
+                </button>
+
+                {/* Bottom Register Prompt Link */}
+                <div className="pt-4 border-t border-white/10 text-center">
+                  <p className="text-xs text-slate-400">
+                    아직 원데이즈뷰티 회원이 아니신가요?{' '}
+                    <button
+                      onClick={() => setAuthMode('register_terms')}
+                      className="text-[#D81B60] hover:text-[#D6A56D] font-bold underline transition-colors ml-1"
+                    >
+                      회원가입하기
+                    </button>
+                  </p>
+                </div>
+              </>
+            )}
+
+            {/* 2. REGISTER STEP 1: TERMS AGREEMENT */}
+            {authMode === 'register_terms' && (
+              <form onSubmit={handleProceedToRegisterForm} className="space-y-6">
+                <div className="text-center space-y-2">
+                  <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-[0.3em]">
+                    STEP 01 / 02
+                  </span>
+                  <h3 className="text-2xl font-serif text-white font-bold">약관 동의</h3>
+                  <p className="text-xs text-slate-400">
+                    원데이즈뷰티 서비스 이용을 위한 약관에 동의해 주세요.
+                  </p>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  {/* Select All */}
+                  <label className="flex items-center gap-3 p-3.5 bg-white/5 border border-[#D6A56D]/30 rounded-xl cursor-pointer hover:bg-white/10 transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={regTermsAll}
+                      onChange={(e) => handleToggleAllTerms(e.target.checked)}
+                      className="w-4 h-4 accent-[#D81B60] rounded cursor-pointer"
+                    />
+                    <span className="text-xs font-bold text-white">전체 약관에 동의합니다.</span>
+                  </label>
+
+                  <div className="space-y-2.5 pt-2">
+                    <label className="flex items-start gap-3 p-3 bg-black/40 border border-white/10 rounded-xl cursor-pointer hover:border-white/20 transition-colors">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={regTermService}
+                        onChange={(e) => setRegTermService(e.target.checked)}
+                        className="w-4 h-4 accent-[#D81B60] rounded mt-0.5 cursor-pointer"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-[#D81B60]">[필수]</span>{' '}
+                        <span className="text-slate-200">쇼핑몰 이용약관 동의</span>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          서비스 이용을 위한 표준약관 및 전자상거래 규정에 동의합니다.
+                        </p>
+                      </div>
+                    </label>
+
+                    <label className="flex items-start gap-3 p-3 bg-black/40 border border-white/10 rounded-xl cursor-pointer hover:border-white/20 transition-colors">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={regTermPrivacy}
+                        onChange={(e) => setRegTermPrivacy(e.target.checked)}
+                        className="w-4 h-4 accent-[#D81B60] rounded mt-0.5 cursor-pointer"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-[#D81B60]">[필수]</span>{' '}
+                        <span className="text-slate-200">개인정보 수집 및 이용 동의</span>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          주문 배송 및 서비스 제공을 위한 최저한의 개인정보를 수집합니다.
+                        </p>
+                      </div>
+                    </label>
+
+                    <label className="flex items-start gap-3 p-3 bg-black/40 border border-white/10 rounded-xl cursor-pointer hover:border-white/20 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={regTermMarketing}
+                        onChange={(e) => setRegTermMarketing(e.target.checked)}
+                        className="w-4 h-4 accent-[#D81B60] rounded mt-0.5 cursor-pointer"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-slate-400">[선택]</span>{' '}
+                        <span className="text-slate-300">쇼핑 혜택 및 마케팅 정보 수신 동의</span>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          신상품 출시 및 VIP 전용 혜택 소식을 수신합니다.
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('login')}
+                    className="w-1/3 py-3 bg-white/5 border border-white/10 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-colors"
+                  >
+                    이전
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-2/3 py-3 bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-[#D81B60]/20"
+                  >
+                    다음 (정보입력)
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* 3. REGISTER STEP 2: USER INFORMATION FORM */}
+            {authMode === 'register_form' && (
+              <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                <div className="text-center space-y-2">
+                  <span className="text-[10px] font-bold text-[#D6A56D] uppercase tracking-[0.3em]">
+                    STEP 02 / 02
+                  </span>
+                  <h3 className="text-2xl font-serif text-white font-bold">회원 정보 입력</h3>
+                  <p className="text-xs text-slate-400">
+                    회원가입에 필요한 정보를 입력해 주세요.
+                  </p>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                      이름 <span className="text-[#D81B60]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder="홍길동"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                      이메일 주소 <span className="text-[#D81B60]">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={regEmail}
+                      onChange={(e) => setRegEmail(e.target.value)}
+                      placeholder="name@example.com"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                      비밀번호 <span className="text-[#D81B60]">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={regPassword}
+                      onChange={(e) => setRegPassword(e.target.value)}
+                      placeholder="비밀번호 입력 (6자 이상)"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                      비밀번호 확인 <span className="text-[#D81B60]">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={regPasswordConfirm}
+                      onChange={(e) => setRegPasswordConfirm(e.target.value)}
+                      placeholder="비밀번호 재입력"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                      휴대폰 번호
+                    </label>
+                    <input
+                      type="tel"
+                      value={regPhone}
+                      onChange={(e) => setRegPhone(e.target.value)}
+                      placeholder="010-0000-0000"
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#D81B60] transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-3">
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('register_terms')}
+                    className="w-1/3 py-3 bg-white/5 border border-white/10 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-colors"
+                  >
+                    이전
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-2/3 py-3 bg-gradient-to-r from-[#D81B60] to-[#A80F48] hover:from-[#A80F48] hover:to-[#D81B60] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-[#D81B60]/20"
+                  >
+                    회원가입 완료
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
